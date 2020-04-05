@@ -1,4 +1,4 @@
-package core.messagepack;
+package core.req;
 
 /**
  * @author wu

@@ -1,4 +1,4 @@
-package core.note.clazz;
+package core.note.function;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,10 +7,10 @@ import java.lang.annotation.Target;
 
 /**
  * @author wu
- * 环境配置
+ * 远程调用方法注解
  */
-@Target( {ElementType.TYPE} )
-@Retention( RetentionPolicy.RUNTIME )
-public @interface Config {
-    String path() default "";
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface DisMethod {
+    int key();
 }

@@ -2,9 +2,9 @@ package core.thread;
 
 
 import com.google.common.base.Stopwatch;
-import core.messagepack.Req;
-import core.messagepack.ReqResultBase;
-import core.messagepack.Task;
+import core.req.Req;
+import core.req.ReqResultBase;
+import core.req.Task;
 import core.thread.base.IThreadPlan;
 import core.thread.base.ThreadImplementer;
 

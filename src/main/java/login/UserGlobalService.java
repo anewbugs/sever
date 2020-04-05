@@ -1,5 +1,6 @@
 package login;
 
+import core.note.function.DisMethod;
 import core.note.clazz.DisServer;
 import core.thread.Department;
 import core.thread.Service;
@@ -25,4 +26,6 @@ public class UserGlobalService extends Service {
     protected void pulseOverride() {
 
     }
+    @DisMethod( key =1 )
+    private void test(){}
 }
