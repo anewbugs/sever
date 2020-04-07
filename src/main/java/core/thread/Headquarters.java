@@ -5,16 +5,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 线程池管理类
- * 单例模式
  * @author wu
  */
 public class Headquarters {
-    /**单例**/
-    public static  Headquarters head = new Headquarters();
+
     /**管理的线程**/
     private ConcurrentHashMap<String,Department> departs = new ConcurrentHashMap();
 
-    private Headquarters() {
+    public Headquarters() {
     }
 
     /**
