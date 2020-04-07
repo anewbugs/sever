@@ -1,6 +1,7 @@
 package core.thread;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 线程池管理类
@@ -9,12 +10,11 @@ import java.util.HashMap;
  */
 public class Headquarters {
     /**单例**/
-    public static  Headquarters INSTANCE = new Headquarters();
+    public static  Headquarters head = new Headquarters();
     /**管理的线程**/
-    private HashMap<String,Department> departs;
+    private ConcurrentHashMap<String,Department> departs = new ConcurrentHashMap();
 
     private Headquarters() {
-        departs = new HashMap<>();
     }
 
     /**
@@ -23,7 +23,7 @@ public class Headquarters {
      * @return
      */
     public Department getDeparts(String key) {
-      return departs.get( key );
+      return  departs.get( key );
     }
 
     /**
