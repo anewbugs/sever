@@ -29,8 +29,8 @@ public class Headquarters {
      * @param key
      * @param value
      */
-    public void putDepart(String key ,Department value) {
-        departs.put( key, value );
+    public void putDepart(Department value) {
+        departs.put(value.getDepartmentId() , value );
     }
 
 }

@@ -7,6 +7,8 @@ import core.req.ReqResultBase;
 import core.req.Task;
 import core.thread.base.IThreadPlan;
 import core.thread.base.ThreadImplementer;
+import jdk.internal.org.objectweb.asm.util.CheckAnnotationAdapter;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,9 +26,16 @@ public class Department implements IThreadPlan {
     /**线程执行者*/
     private final ThreadImplementer threadImpl;
 
+    /**所属**/
+    private  Headquarters head;
+
+    public String getDepartmentId() {
+        return departmentId;
+    }
 
     /**当前业务描述*/
     private String departmentId;
+
 
     /**最新一条消息的ID*/
     private long newReqID;
@@ -159,5 +168,25 @@ public class Department implements IThreadPlan {
         pulseReqs.clear();
         pulseReqResults.clear();
 
+    }
+
+    /**
+     * 启动当前业务线程
+     * @param head
+     */
+    public void start(Headquarters head){
+        this.head = head;
+        this.head.putDepart(this);
+
+        this.threadImpl.setName(toString());
+        this.threadImpl.pluseon();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("HEAD",head)
+                .append("departId",departmentId)
+                .toString();
     }
 }

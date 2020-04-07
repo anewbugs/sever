@@ -1,10 +1,14 @@
 package core.boot.config;
 
+import core.thread.Headquarters;
 import core.until.Until;
 
 import java.util.Properties;
 
 public class Config {
+
+    /**主世界**/
+    public static final Headquarters SERVER_WORD_HEAD = new Headquarters();
 
     /**路径索引**/
     public static final String CONFIG_PATH = "config.properties";
