@@ -21,4 +21,13 @@ public class SException extends RuntimeException{
     public SException(String string){
         super(string);
     }
+
+    /**
+     * 系统不捕获的错误当对当前系统有影响
+     * @param message
+     * @param cause
+     */
+    public SException(String message, Throwable cause) {
+        super( message, cause );
+    }
 }
