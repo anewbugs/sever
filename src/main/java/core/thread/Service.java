@@ -17,8 +17,9 @@ public abstract class Service {
      * 构造方法
      * @param department
      */
-    public Service(Department department) {
+    public Service(Department department,String id) {
         this.department = department;
+        this.id = id;
 
     }
 

@@ -18,8 +18,8 @@ public class UserGlobalService extends Service {
     /**掉线玩家**/
     private HashMap<String ,GameLoacat> offLine = new HashMap<>();
     static class GameLoacat{}
-    public UserGlobalService(Department department) {
-        super( department );
+    public UserGlobalService(Department department,String id) {
+        super( department,id );
     }
 
     @Override

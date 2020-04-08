@@ -22,12 +22,17 @@ public class Config {
     public static final int DEPART_CONN_SIZE;
     /**连接索引**/
     public static final String DEPART_CONN_NAME = "conn";
+    /**登陆**/
+    public static final String DEPART_Login_NAME = "login";
 
     /**游戏房间服务前缀**/
     public static final String SRV_GAME_NAME = "room";
 
     /**连接服务前缀**/
     public static final String SRV_CONN_NAME = "link";
+
+    /**登陆服务前缀**/
+    public static final String SRV_LOGIN_NAME = "online";
 
     /**登录数量限制**/
     public static final int LIMIT_LOGIN_SIZE;

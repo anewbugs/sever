@@ -173,15 +173,23 @@ public class Department implements IThreadPlan {
      * 处理本次返回值
      */
     private void pulseReqResults() {
-      
+     while (!pulseReqResults.isEmpty()){
+         Req reqResult = pulseReqResults.remove( 0 );
+         if (reqResultListener.containsKey( reqResult.id )){
+             reqResultListener.get( reqResult.id ).listen( reqResult );
+         }else{
+             LogUntil.logger.error("Req返回监听错误 req={}",reqResult,this);
+         }
+
+     }
     }
 
     /**
      * 处理超时监听
      */
-    private void pulseReqResultListenTimeOut() {
-        // todo
-    }
+//    private void pulseReqResultListenTimeOut() {
+//        // todo
+//    }
 
     /**
      * 子类实现星耀
@@ -210,6 +218,14 @@ public class Department implements IThreadPlan {
         this.threadImpl.pluseon();
     }
 
+    public long createReqID(){
+        return ++newReqID;
+    }
+
+    public void addService(Service value){
+        services.put( value.id,value );
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -218,7 +234,5 @@ public class Department implements IThreadPlan {
                 .toString();
     }
 
-    public long createReqID(){
-        return ++newReqID;
-    }
+
 }

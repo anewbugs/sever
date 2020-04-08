@@ -29,5 +29,9 @@ public class ReqResultBase {
         function.apply(object,context);
     }
 
+    public void listen(Req req){
+        reqBack(req.returns);
+    }
+
 }
 
