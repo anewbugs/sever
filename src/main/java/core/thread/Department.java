@@ -11,6 +11,7 @@ import core.until.LogUntil;
 import jdk.internal.org.objectweb.asm.util.CheckAnnotationAdapter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -39,7 +40,7 @@ public class Department implements IThreadPlan {
 
 
     /**最新一条消息的ID*/
-    private long newReqID;
+    private long newReqID = 0;
 
     /**下属服务*/
     private Map<String, Service> services = new ConcurrentHashMap<>();
@@ -148,14 +149,23 @@ public class Department implements IThreadPlan {
     }
 
     /**
-     * 处理一次亲求
+     * 处理一次请求求
      * @param req
      */
     private void receiveReq(Req req) {
         try{
+            reqActiveStack.add( req );
+            //执行请求
+            Service serv = services.get( req.reqTo.serviceId );
+            Method method = Service.getFunction(serv.getClass(), req.methodKey );
+            method.setAccessible( true );
+            method.invoke( serv,req.methodParam );
+
 
         }catch (Throwable e){
-            LogUntil.logger.error("");
+            LogUntil.logger.error("Req请求错误，req={}",req,this);
+        }finally {
+            reqActiveStack.removeLast();
         }
     }
 
@@ -163,7 +173,7 @@ public class Department implements IThreadPlan {
      * 处理本次返回值
      */
     private void pulseReqResults() {
-        // todo
+      
     }
 
     /**
@@ -206,5 +216,9 @@ public class Department implements IThreadPlan {
                 .append("HEAD",head)
                 .append("departId",departmentId)
                 .toString();
+    }
+
+    public long createReqID(){
+        return ++newReqID;
     }
 }

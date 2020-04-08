@@ -9,7 +9,11 @@ import core.thread.Headquarters;
  */
 public class ConnStart {
 
-    public void init(Headquarters head){
+    /**
+     * 初始化连接服务
+     * @param head
+     */
+    public static void init(Headquarters head){
         for (int i = 0; i < Config.DEPART_CONN_SIZE; i++) {
             Department depart = new ConnDepart(Config.DEPART_CONN_NAME + i);
            depart.start(head);

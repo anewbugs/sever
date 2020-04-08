@@ -58,7 +58,7 @@ public abstract class Service {
      * @param functionKey 方法引用标志
      * @return
      */
-    private static Method getFunction(Class<?> clazz,int functionKey){
+    public static Method getFunction(Class<?> clazz,int functionKey){
         Method[] functions = proxy.get(clazz);
         return functions[functionKey];
      }
