@@ -2,6 +2,7 @@ package core.req;
 
 
 import core.until.Params;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Req {
     /**
@@ -36,4 +37,16 @@ public class Req {
     public Params returns ;
 
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("type",type)
+                .append("fromHeadId",fromHeadId)
+                .append("fromDepartId",fromDepartId)
+                .append("reqTo",reqTo)
+                .append("methodKey",methodKey)
+                .append("methodParam",methodParam)
+                .append("returns",returns)
+                .toString();
+    }
 }

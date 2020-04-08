@@ -7,6 +7,7 @@ import core.req.ReqResultBase;
 import core.req.Task;
 import core.thread.base.IThreadPlan;
 import core.thread.base.ThreadImplementer;
+import core.until.LogUntil;
 import jdk.internal.org.objectweb.asm.util.CheckAnnotationAdapter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -138,7 +139,24 @@ public class Department implements IThreadPlan {
      * 处理本次请求
      */
     private void pulseReqs() {
-        // todo
+        while(!pulseReqs.isEmpty()){
+            Req req = pulseReqs.remove(0);
+            receiveReq(req);
+        }
+
+
+    }
+
+    /**
+     * 处理一次亲求
+     * @param req
+     */
+    private void receiveReq(Req req) {
+        try{
+
+        }catch (Throwable e){
+            LogUntil.logger.error("");
+        }
     }
 
     /**
