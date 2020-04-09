@@ -7,8 +7,7 @@ import core.req.ReqResultBase;
 import core.req.Task;
 import core.thread.base.IThreadPlan;
 import core.thread.base.ThreadImplementer;
-import core.until.LogUntil;
-import jdk.internal.org.objectweb.asm.util.CheckAnnotationAdapter;
+import core.until.Log;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.lang.reflect.Method;
@@ -163,7 +162,7 @@ public class Department implements IThreadPlan {
 
 
         }catch (Throwable e){
-            LogUntil.logger.error("Req请求错误，req={}",req,this);
+            Log.core.error( "Req请求错误，req={}",req,this );
         }finally {
             reqActiveStack.removeLast();
         }
@@ -178,7 +177,7 @@ public class Department implements IThreadPlan {
          if (reqResultListener.containsKey( reqResult.id )){
              reqResultListener.get( reqResult.id ).listen( reqResult );
          }else{
-             LogUntil.logger.error("Req返回监听错误 req={}",reqResult,this);
+             Log.core.error( "Req返回监听错误 req={}",reqResult,this );
          }
 
      }

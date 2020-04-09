@@ -1,10 +1,9 @@
 package conn.netty;
 
-import java.util.concurrent.TimeUnit;
 
-import core.boot.config.Config;
-import core.until.LogUntil;
+import core.boot.config.Config;;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -12,70 +11,56 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.timeout.ReadTimeoutHandler;
 public class Net extends Thread{
+    //解码配置
+    static final int MAX_FRAME_LENGTH = 1024;
+    static final int LENGTH_FIELD_OFFSET = 0;
+    static final int LENGTH_FIELD_LENGTH = 2;
+    static final int LENGTH_ADJUSTMENT = 0;
+    static final int INITIAL_BYTES_TO_STRIP = 0;
+
     @Override
     public void run() {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         NioEventLoopGroup boosGroup = new NioEventLoopGroup();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
-
         serverBootstrap
                 .group(boosGroup,workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY,true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.SO_BACKLOG, 10240)
+                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
 
 
                     protected void initChannel(NioSocketChannel nioSocketChannel) {
-//                        //连接处理Handler
-//                        nioSocketChannel.pipeline().addLast("ConnectionHandler",new ConnectionHandler());
-//                        //消息长度处里Handler 解决半包和粘包问题
-//                        nioSocketChannel.pipeline().addLast("LengthFieldBasedFrameDecoder", new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH,LENGTH_FIELD_OFFSET,LENGTH_FIELD_LENGTH,LENGTH_ADJUSTMENT,INITIAL_BYTES_TO_STRIP));
-//                        //数据封包处理Handler
-//                        nioSocketChannel.pipeline().addLast("LengthFieldPrepender",new LengthFieldPrepender(LENGTH_FIELD_LENGTH));
-//                        //超时控制handler
-//                        nioSocketChannel.pipeline().addLast("ReadTimeoutHandler" , new ReadTimeoutHandler(CONNECTION_TIMEOUT_SECOND));
-//                        //服务器断连
-//                        nioSocketChannel.pipeline().addLast("ServerHandler" ,new ServerHandler());
-//                        //Ping消息回应
-//                        nioSocketChannel.pipeline().addLast("PingHandle", new PingHandle());
-//                        //登入消息处理
-//                        nioSocketChannel.pipeline().addLast("LoginHandle" , new LoginHandle());
-//                        //玩家数据获取
-//                        nioSocketChannel.pipeline().addLast("UserHandle",new UserHandle());
-//                        //房间消息管理
-//                        nioSocketChannel.pipeline().addLast("RoomHandle" , new RoomHandle());
+                        //消息长度处里Handler 解决半包和粘包问题
+                        nioSocketChannel.pipeline().addLast("LengthFieldBasedFrameDecoder", new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH,LENGTH_FIELD_OFFSET,LENGTH_FIELD_LENGTH,LENGTH_ADJUSTMENT,INITIAL_BYTES_TO_STRIP));
+                        //数据封包处理Handler
+                        nioSocketChannel.pipeline().addLast("LengthFieldPrepender",new LengthFieldPrepender(LENGTH_FIELD_LENGTH));
+                        //数据处理
+                        nioSocketChannel.pipeline().addLast("ServerHandler",new ServerHandler());
+
 
 
                     }
                 });
         bind(serverBootstrap, Config.LOCAL_PORT);
-        LogUntil.logger.info("网络服务启动*********************************");
+        System.out.println("网络服务启动*********************************");
 
 
-//        while(!Thread.interrupted()){
-//            try {
-//                TimeUnit.MILLISECONDS.sleep(NETTY_SHUTDOWN_CHECKED_PERIOD);
-//            } catch (InterruptedException e) {
-//                LogUntil.logger.error(e.toString());
-//                Thread.currentThread().interrupt();
-//            }
-//        }
-//        LogUntil.logger.info("netty关闭");
-//        boosGroup.shutdownGracefully();
-//        workerGroup.shutdownGracefully();
     }
 
     private static void bind(final ServerBootstrap serverBootstrap, final int port) {
 
         serverBootstrap.bind(port).addListener(future -> {
             if (future.isSuccess()) {
-                LogUntil.logger.info("端口[" + port + "]绑定成功!");
+                System.out.println("端口[" + port + "]绑定成功!");
             } else {
-                LogUntil.logger.info("端口[" + port + "]绑定失败!");
+                System.out.println("端口[" + port + "]绑定失败!");
             }
         });
     }

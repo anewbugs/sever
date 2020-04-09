@@ -1,9 +1,8 @@
 package core.ob;
 
 import core.cause.SException;
-import core.until.LogUntil;
+import core.until.Log;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
@@ -33,7 +32,7 @@ public class Observer {
         try {
             Observers.get( key ).invoke( null,objects );
         } catch (Exception e) {
-            LogUntil.logger.error( "消息分发错误",e );
+            Log.msg.error( "消息不存在 Msg={}", key, e );
         }
     }
 

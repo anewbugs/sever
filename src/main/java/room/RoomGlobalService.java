@@ -17,8 +17,8 @@ import java.util.HashMap;
 public class RoomGlobalService extends Service {
     /**房间列表**/
     private HashMap<Long, GameDepart> rooms = new HashMap<>( );
-    public RoomGlobalService(Department department) {
-        super( department );
+    public RoomGlobalService(Department department ,String id) {
+        super( department ,id);
     }
 
     @Override

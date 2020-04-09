@@ -7,8 +7,8 @@ import core.thread.Service;
 //todo
 public class GameService extends Service {
 
-    public GameService(Department department) {
-        super( department );
+    public GameService(Department department,String id) {
+        super( department , id);
     }
 
     @Override
