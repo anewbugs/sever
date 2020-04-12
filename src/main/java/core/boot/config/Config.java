@@ -25,7 +25,15 @@ public class Config {
     /**登陆**/
     public static final String DEPART_Login_NAME = "login";
 
+    /**大厅线程**/
+    public static final String DEPART_ROOM_LIST_NAME = "hall";
+    /**大厅服务**/
+    public static final String SRV_ROOM_LIST_NAME = "roomList";
+
+
+
     /**游戏房间服务前缀**/
+    //房间用纯数字
     public static final String SRV_GAME_NAME = "room";
 
     /**连接服务前缀**/
