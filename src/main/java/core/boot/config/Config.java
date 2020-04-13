@@ -57,6 +57,11 @@ public class Config {
     /**端口号**/
     public static final String LOCAL_PORT_name ="local.port";
 
+    /**索引**/
+    public static final String LOST_CHANNLE_NAME = "offline.time";
+    /**Chanle断连**/
+    public static final int  LOST_CHANNLE_TIME;
+
 
     /**数据初始化**/
     static {
@@ -71,6 +76,8 @@ public class Config {
         LIMIT_ROOM_SIZE  = Until.transformInt(properties.getProperty(LIMIT_ROOM_NAME));
         //端口号
         LOCAL_PORT = Until.transformInt(properties.getProperty(LOCAL_PORT_name));
+        //掉线超时
+        LOST_CHANNLE_TIME = Until.transformInt(properties.getProperty(LOST_CHANNLE_NAME));
 
 
 

@@ -10,8 +10,8 @@ import io.netty.channel.Channel;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ConnService extends Service {
-    /**掉线检查时间**/
-    private static final int LOST_CHECK_TIME = 1000;
+
+
     /**netty通信通道**/
     private Channel channel;
     /**客户端消息队列**/
@@ -19,9 +19,12 @@ public class ConnService extends Service {
     /**未收到消息的次数**/
     private int lostTimes = 0;
     /**检查链接计时器**/
-    private TickTimer connCheck = new TickTimer(LOST_CHECK_TIME);
+    private TickTimer connCheck = new TickTimer(10);
     /**玩家状态**/
     private ConnStatus status = new ConnStatus();
+    /**检查客户端断连**/
+    private TickTimer chanleCheck = new TickTimer(10);
+
 
     public ConnService(Department department, String id,Channel channel) {
         super( department, id );
@@ -50,7 +53,6 @@ public class ConnService extends Service {
     private void pulseInput(){
         if (input.isEmpty() ){
             if (connCheck.isLost()){
-                lostTimes++;
                 connCheck.reset();
             }
             return;
