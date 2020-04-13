@@ -1,9 +1,13 @@
 package proto.base;
 
+import game.GameMsgExtend;
+import login.LoginMsgExtend;
+import room.RoomMsgExtend;
+
 import java.lang.reflect.Field;
 import java.util.HashSet;
 
-public class MsgName {
+public class ConfigMsgName {
     public static final class Battle {
         public static final String MSG_ENTER_BATTLE = "MsgEnterBattle";
         public static final String MSG_BATTLE_RESULT = "MsgBattleResult";
@@ -70,18 +74,37 @@ public class MsgName {
      * 游戏
      */
     private static void initAllGameProtoName() {
+        GameMsgExtend.reg(
+                Room.MSG_LEAVE_ROOM,
+                Room.MSG_GET_ROOM_INFO,
+                Room.MSG_START_BATTLE,
+                Room.MSG_ENTER_ROOM,
+                //战斗数据
+                Sync.MSG_FIRE,
+                Sync.MSG_SYNC_TANK
+        );
     }
 
     /**
      * 房间
      */
     private static void initAllRoomProtoName() {
+        RoomMsgExtend.reg(
+                Room.MSG_CREATE_ROOM,
+                Room.MSG_ENTER_ROOM,
+                Room.MSG_GET_ROOM_LIST
+        );
     }
 
     /**
      * 账户
      */
     private static void initAllAcountProtoName() {
+        LoginMsgExtend.reg(
+                Login.MSG_LOGIN,
+                Login.MSG_REGISTER
+                );
+
     }
 
 
@@ -89,7 +112,7 @@ public class MsgName {
      * 所有协议初始化
      */
     private static void initAllProtoName() {
-        Class innerClazz[] = MsgName.class.getClasses();
+        Class innerClazz[] = ConfigMsgName.class.getClasses();
         for (Class clazz : innerClazz) {
            Field field[] = clazz.getFields();
             for (Field field1 : field) {

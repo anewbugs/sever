@@ -1,8 +1,6 @@
-package login;
-
+package room;
 
 import core.ob.MsgExtend;
-import static core.ob.Observer.*;
 import core.req.Escrow;
 import core.until.Log;
 import core.until.Params;
@@ -10,16 +8,17 @@ import core.until.Params;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class LoginMsgExtend extends MsgExtend {
-    private final static HashSet<String> loginMsgExtend = new HashSet<>();
+import static core.ob.Observer.ob;
 
+public class RoomMsgExtend extends MsgExtend {
+    private static final HashSet<String> roomMsgExtend = new HashSet<>(  );
     public static void reg(String...keys){
-        loginMsgExtend.addAll( Arrays.asList( keys ) );
+        roomMsgExtend.addAll( Arrays.asList( keys ) );
     }
 
     @Override
     public void fire(Escrow escrow, Params params) {
-        if (!loginMsgExtend.contains(escrow.msgName)){
+        if (!roomMsgExtend.contains(escrow.msgName)){
             Log.msg.error("不是本阶段的消息 msgId={}",escrow.msgName);
             return;
         }
