@@ -24,6 +24,7 @@ public class MsgName {
     }
 
     public static final class Notepad {
+
         public static final String MSG_GET_TEXT = "MsgGetText";
         public static final String MSG_SAVE_TEXT = "MsgSaveText";
     }
@@ -50,11 +51,44 @@ public class MsgName {
 
     private  final static HashSet<String> proto = new HashSet();
 
+    //消息初始化
+    static {
+        //所有协议初始化名称
+        initAllProtoName();
+
+        //初始化账户有关的协议
+        initAllAcountProtoName();
+
+        //初始化房间有关的协议名称
+        initAllRoomProtoName();
+
+        //初始化游戏有关的协议名称
+        initAllGameProtoName();
+    }
+
+    /**
+     * 游戏
+     */
+    private static void initAllGameProtoName() {
+    }
+
+    /**
+     * 房间
+     */
+    private static void initAllRoomProtoName() {
+    }
+
+    /**
+     * 账户
+     */
+    private static void initAllAcountProtoName() {
+    }
+
 
     /**
      * 所有协议初始化
      */
-    private static void init() {
+    private static void initAllProtoName() {
         Class innerClazz[] = MsgName.class.getClasses();
         for (Class clazz : innerClazz) {
            Field field[] = clazz.getFields();
@@ -69,6 +103,10 @@ public class MsgName {
         }
     }
 
+
+    public static boolean isProto(String msgId){
+        return proto.contains(msgId);
+    }
 
 
 //    public static void main(String[] args) {
