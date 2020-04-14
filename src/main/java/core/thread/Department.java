@@ -4,6 +4,7 @@ package core.thread;
 import com.google.common.base.Stopwatch;
 import core.req.Req;
 import core.req.ReqResultBase;
+import core.req.ReqTo;
 import core.req.Task;
 import core.thread.base.IThreadPlan;
 import core.thread.base.ThreadImplementer;
@@ -36,6 +37,10 @@ public class Department implements IThreadPlan {
 
     /**当前业务描述*/
     private String departmentId;
+
+    public String getId(){
+        return departmentId;
+    }
 
 
     /**最新一条消息的ID*/
@@ -98,6 +103,14 @@ public class Department implements IThreadPlan {
         currentDepart.set(null);
     }
 
+    public void addReq(Req req){
+        reqs.add(req);
+    }
+
+    public void addReqResult(Req req){
+        reqResults.add(req);
+    }
+
     /**
      * 星耀
      */
@@ -114,10 +127,30 @@ public class Department implements IThreadPlan {
 //        //清除超时监听
 ////        pulseReqResultListenTimeOut();
 
-        //运行子类星耀
-        pulseOveride();
+        pulseService();
+
+
+        try{//运行子类星耀
+            pulseOveride();
+        }catch (Throwable e){
+            Log.core.error("运行子类心跳错误 depart={}",this,e);
+        }
+
         //刷新本次星耀缓存
         flushReqbuffer();
+    }
+
+    /**
+     * 调用下属服务
+     */
+    private void pulseService() {
+        for (Service srv : services.values()) {
+            try{
+                srv.pulse();
+            }catch (Throwable e){
+                Log.core.error("调用下属服务出错 Service={}",srv,e);
+            }
+        }
     }
 
 
@@ -159,8 +192,6 @@ public class Department implements IThreadPlan {
             Method method = Service.getFunction(serv.getClass(), req.methodKey );
             method.setAccessible( true );
             method.invoke( serv,req.methodParam );
-
-
         }catch (Throwable e){
             Log.core.error( "Req请求错误，req={}",req,this );
         }finally {
@@ -217,6 +248,10 @@ public class Department implements IThreadPlan {
         this.threadImpl.pluseon();
     }
 
+    /**
+     * 新Req申请id
+     * @return
+     */
     public long createReqID(){
         return ++newReqID;
     }
@@ -231,6 +266,23 @@ public class Department implements IThreadPlan {
                 .append("HEAD",head)
                 .append("departId",departmentId)
                 .toString();
+    }
+
+    /**
+     * 消息发送
+     * @param to
+     */
+    public void req(ReqTo to,int methodKey,Service srv,Object...objects) {
+        Req req = new Req();
+        req.id = createReqID();
+        req.fromDepartId = srv.department.departmentId;
+        req.fromSrvId = srv.id;
+        req.type = Req.Req_Type.RPC;
+        req.reqTo = new ReqTo(to);
+        req.methodKey = methodKey;
+        req.methodParam = objects;
+
+        head.handleReq(req);
     }
 
 

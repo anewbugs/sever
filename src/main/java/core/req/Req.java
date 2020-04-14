@@ -10,8 +10,7 @@ public class Req {
      */
     public  enum Req_Type {
         RPC,
-        RETURN,
-        PING;
+        RETURN
 
     }
     /**请求类型*/
@@ -21,8 +20,8 @@ public class Req {
     public long  id;
 
     /**请求方地址**/
-    public String fromHeadId;
     public String fromDepartId;
+    public String fromSrvId;
 
     /**接收方的具体信息*/
     public ReqTo reqTo;
@@ -41,7 +40,6 @@ public class Req {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("type",type)
-                .append("fromHeadId",fromHeadId)
                 .append("fromDepartId",fromDepartId)
                 .append("reqTo",reqTo)
                 .append("methodKey",methodKey)

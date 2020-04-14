@@ -1,6 +1,7 @@
 package core.thread;
 
 import core.cause.SException;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -65,4 +66,11 @@ public abstract class Service {
      }
 
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("belongDepart",department.getId())
+                .append("thisId",this.id)
+                .toString();
+    }
 }

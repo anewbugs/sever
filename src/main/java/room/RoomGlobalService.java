@@ -1,6 +1,7 @@
 package room;
 
 import core.note.clazz.DisServer;
+import core.note.function.DisMethod;
 import core.thread.Department;
 import core.thread.Service;
 import game.GameDepart;
@@ -15,6 +16,11 @@ import java.util.HashMap;
 @DisServer
 //TODO
 public class RoomGlobalService extends Service {
+    /**MethodKey*/
+    /**消息分发**/
+    public final static int HALL_METHOD_MSG_HANDLE = 0;
+
+    /*********************************/
     /**房间列表**/
     private HashMap<Long, GameDepart> rooms = new HashMap<>( );
     public RoomGlobalService(Department department ,String id) {
@@ -24,5 +30,10 @@ public class RoomGlobalService extends Service {
     @Override
     protected void pulseOverride() {
 
+    }
+
+    @DisMethod(key = HALL_METHOD_MSG_HANDLE)
+    private void msgHandle(Object o){
+        //todo
     }
 }

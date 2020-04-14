@@ -4,6 +4,7 @@ import conn.ConnStart;
 import core.boot.config.Config;
 import core.cause.SException;
 import core.note.clazz.DisServer;
+import core.note.clazz.ImportPackage;
 import core.note.function.DisMethod;
 import core.note.function.MsgHandle;
 import core.thread.Department;
@@ -11,6 +12,9 @@ import core.thread.Service;
 import login.LoginDepart;
 import login.UserGlobalService;
 import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -33,12 +37,19 @@ public class ServerApplication {
      */
     public static void run(Class<?> primarySources,String[] args){
         //反射扫描
-        Reflections reflections = new Reflections();
+        Reflections reflections = new Reflections(
+                new ConfigurationBuilder()
+                        .forPackages(primarySources.getAnnotation(ImportPackage.class).packages())
+                        .addScanners(new MethodAnnotationsScanner() ) // 添加 方法注解扫描工具
+                        .addScanners(new TypeAnnotationsScanner())
+        );
         initServicesProxy( reflections.getTypesAnnotatedWith( DisServer.class ) );
         initMsgObserver( reflections.getMethodsAnnotatedWith( MsgHandle.class) );
 
         //链接服务启动
         ConnStart.init( Config.SERVER_WORD_HEAD);
+        //网络监听
+        ConnStart.NetStart();
 
         //登陆服务启动
         Department login = new LoginDepart( Config.DEPART_Login_NAME);

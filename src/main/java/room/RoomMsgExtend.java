@@ -2,6 +2,7 @@ package room;
 
 import core.ob.MsgExtend;
 import core.req.Escrow;
+import core.req.MsgContextBase;
 import core.until.Log;
 import core.until.Params;
 
@@ -17,11 +18,13 @@ public class RoomMsgExtend extends MsgExtend {
     }
 
     @Override
-    public void fire(Escrow escrow, Params params) {
+    public void fire(Escrow escrow, MsgContextBase params) {
         if (!roomMsgExtend.contains(escrow.msgName)){
             Log.msg.error("不是本阶段的消息 msgId={}",escrow.msgName);
             return;
         }
         ob.fire(escrow.msgName,escrow,params);
     }
+
+
 }

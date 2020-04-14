@@ -1,5 +1,6 @@
 package conn;
 
+import conn.netty.Net;
 import core.boot.config.Config;
 import core.thread.Department;
 import core.thread.Headquarters;
@@ -18,6 +19,10 @@ public class ConnStart {
             Department depart = new ConnDepart(Config.DEPART_CONN_NAME + i);
            depart.start(head);
         }
+    }
+
+    public static void NetStart(){
+        new Net().start();
     }
 
 }

@@ -2,8 +2,10 @@ package login;
 
 import core.note.function.DisMethod;
 import core.note.clazz.DisServer;
+import core.req.Escrow;
 import core.thread.Department;
 import core.thread.Service;
+import core.until.Params;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,18 +13,15 @@ import java.util.HashSet;
 @DisServer
 //todo
 public class UserGlobalService extends Service {
-    /**消息参数*/
+    private static final LoginMsgExtend msgHandle = new LoginMsgExtend();
+    /**MethodKey*/
     /**消息分发**/
-    public final static int METHOD_MSGHANDLE = 0;
+    public final static int LOGIN_METHOD_MSG_HANDLE = 0;
 
     /*********************************/
+    MsgParam userGlobal = new MsgParam();
 
 
-
-    /**在线玩家**/
-    private HashSet<String> logins = new HashSet<>(  );
-    /**掉线玩家**/
-    private HashMap<String ,GameLoacat> offLine = new HashMap<>();
     static class GameLoacat{}
     public UserGlobalService(Department department,String id) {
         super( department,id );
@@ -35,9 +34,9 @@ public class UserGlobalService extends Service {
 //    @DisMethod( key =1 )
 //    private void test(){}
 
-    @DisMethod( key = METHOD_MSGHANDLE )
+    @DisMethod( key = LOGIN_METHOD_MSG_HANDLE )
     private void msgHandle(Object o){
-
+        msgHandle.hadleMsg((Escrow) o,userGlobal);
     }
 
 
