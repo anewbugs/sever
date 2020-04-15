@@ -30,6 +30,13 @@ public class Until {
        return properties;
     }
 
+    public static InputStream readFileFromResource(String path)  {
+
+        InputStream in = Until.class.getClassLoader().getResourceAsStream("config.properties");
+
+        return in;
+    }
+
     /**
      * 字符串转Integer
      * @param value
