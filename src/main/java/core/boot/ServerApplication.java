@@ -15,6 +15,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ConfigurationBuilder;
+import proto.base.ConfigMsgName;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -45,6 +46,8 @@ public class ServerApplication {
         );
         initServicesProxy( reflections.getTypesAnnotatedWith( DisServer.class ) );
         initMsgObserver( reflections.getMethodsAnnotatedWith( MsgHandle.class) );
+
+        ConfigMsgName.msgLimitInit();
 
         //链接服务启动
         ConnStart.init( Config.SERVER_WORD_HEAD);

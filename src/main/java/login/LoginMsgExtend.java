@@ -6,7 +6,6 @@ import static core.ob.Observer.*;
 import core.req.Escrow;
 import core.req.MsgContextBase;
 import core.until.Log;
-import core.until.Params;
 import proto.base.ConfigMsgName;
 
 import java.util.Arrays;
@@ -15,7 +14,7 @@ import java.util.HashSet;
 public class LoginMsgExtend extends MsgExtend {
 
 
-    private final static HashSet<String> loginMsgExtend = new HashSet<>();
+    private  static HashSet<String> loginMsgExtend = new HashSet<>();
 
     public static void reg(String...keys){
         loginMsgExtend.addAll( Arrays.asList( keys ) );

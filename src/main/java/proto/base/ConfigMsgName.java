@@ -70,6 +70,21 @@ public class ConfigMsgName {
         initAllGameProtoName();
     }
 
+    public static void msgLimitInit(){
+        //所有协议初始化名称
+        initAllProtoName();
+
+        //初始化账户有关的协议
+        initAllAcountProtoName();
+
+        //初始化房间有关的协议名称
+        initAllRoomProtoName();
+
+        //初始化游戏有关的协议名称
+        initAllGameProtoName();
+    }
+
+
     /**
      * 游戏
      */
