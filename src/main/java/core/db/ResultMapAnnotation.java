@@ -1,42 +1,55 @@
 package core.db;
 
-import java.io.InputStream;
+import java.io.IOException;
+import java.io.Reader;
 
-import core.until.Until;
-import data.dao.AccountMapper;
+import data.enity.PlayerData;
+import data.mapper.AccountMapper;
+import data.enity.Account;
+import data.mapper.PlayDataMapper;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+/**
+ * mybatis配置
+ * xml读取
+ * mapper读取
+ */
+
 public class ResultMapAnnotation {
     private static SqlSession session;
 
-//    private static GradeAnnotationInterface gradeInter=null;
-//
-//   private static StudentAnnotationInterfacestudentInter=null;
 
     static{
-        //mybatis的配置文件
         String resource = "mybatis.xml";
-        //使用类加载器加载mybatis的配置文件（它也加载关联的映射文件）
-        InputStream is = Until.readFileFromResource(resource);//ResultMapAnnotation.class.getResourceAsStream(resource);
-        //构建sqlSession的工厂
-        SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
-        //使用MyBatis提供的Resources类加载mybatis的配置文件（它也加载关联的映射文件）
-        // Readerreader = Resources.getResourceAsReader(resource);
-        // 构建sqlSession的工厂
-        // SqlSessionFactorysessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        // 创建能执行映射文件中sql的sqlSession
-        session = sessionFactory.openSession();
+        try {
+            Reader reader = Resources.getResourceAsReader(resource);
+            // 构建sqlSession的工厂
+            SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader);
+            // 创建能执行映射文件中sql的sqlSession，并设自动提交事务
+            session = sessionFactory.openSession(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-//       gradeInter=session.getMapper(GradeAnnotationInterface.class);
-//
-//       studentInter=session.getMapper(StudentAnnotationInterface.class);
     }
 
     public static void main(String[] args) {
-        AccountMapper accountMapper = session.getMapper(AccountMapper.class);
-        System.out.println(accountMapper.queryAccont());
+        PlayDataMapper playDataMapper = session.getMapper(PlayDataMapper.class);
+
+
+        System.out.println( playDataMapper.updatePlayerData(new PlayerData("aa",110,"清零",110,0)));
+        System.out.println(playDataMapper.queryplayerData("aa"));
+
+
+
+
+    }
+
+    public <T> T getMapper(Class<T> var1){
+        return session.getMapper(var1);
     }
 
 }
