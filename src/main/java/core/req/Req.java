@@ -5,6 +5,8 @@ import core.until.Params;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Req {
+
+
     /**
      * 请求类型枚举类
      */
@@ -21,8 +23,8 @@ public class Req {
 
     /**请求方地址**/
     public String fromDepartId;
-    public String fromSrvId;
-
+    /**srvid**/
+    public String fromrSvId;
     /**接收方的具体信息*/
     public ReqTo reqTo;
 
@@ -35,12 +37,26 @@ public class Req {
     /**返回值*/
     public Params returns ;
 
+    /**
+     * 请求返回重建
+     * @return
+     */
+    public Req returnNew() {
+        Req req = new Req();
+        req.id = this.id;
+        req.type = Req_Type.RETURN;
+        req.fromDepartId = this.reqTo.departmentId;
+        req.fromrSvId = this.reqTo.serviceId;
+        req.reqTo = new ReqTo(this.fromDepartId,this.fromrSvId,"消息返回");
+        return req;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("type",type)
                 .append("fromDepartId",fromDepartId)
+                .append("fromrSvId",fromrSvId)
                 .append("reqTo",reqTo)
                 .append("methodKey",methodKey)
                 .append("methodParam",methodParam)

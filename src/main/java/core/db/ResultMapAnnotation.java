@@ -36,16 +36,12 @@ public class ResultMapAnnotation {
 
     }
 
+
+    //测试
     public static void main(String[] args) {
         PlayDataMapper playDataMapper = session.getMapper(PlayDataMapper.class);
-
-
         System.out.println( playDataMapper.updatePlayerData(new PlayerData("aa",110,"清零",110,0)));
         System.out.println(playDataMapper.queryplayerData("aa"));
-
-
-
-
     }
 
     public <T> T getMapper(Class<T> var1){

@@ -9,7 +9,9 @@ import core.req.Task;
 import core.thread.base.IThreadPlan;
 import core.thread.base.ThreadImplementer;
 import core.until.Log;
+import core.until.Params;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.ibatis.annotations.Param;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -272,16 +274,33 @@ public class Department implements IThreadPlan {
      * 消息发送
      * @param to
      */
-    public void req(ReqTo to,int methodKey,Service srv,Object...objects) {
+    public void req(ReqTo to,int methodKey,String srvId,Object...objects) {
         Req req = new Req();
         req.id = createReqID();
-        req.fromDepartId = srv.department.departmentId;
-        req.fromSrvId = srv.id;
+        req.fromDepartId = departmentId;
+        req.fromrSvId = srvId;
         req.type = Req.Req_Type.RPC;
         req.reqTo = new ReqTo(to);
         req.methodKey = methodKey;
         req.methodParam = objects;
 
+        head.handleReq(req);
+    }
+
+    public void returns(int methodKey,Object...objects){
+        Req req = reqActiveStack.getLast().returnNew();
+        req.id = createReqID();
+        req.methodKey = methodKey;
+        req.type = Req.Req_Type.RPC;
+        req.methodParam = objects;
+
+        head.handleReq(req);
+
+    }
+
+    public void returns(Params params){
+        Req req = reqActiveStack.getLast().returnNew();
+        req.returns = params;
         head.handleReq(req);
     }
 

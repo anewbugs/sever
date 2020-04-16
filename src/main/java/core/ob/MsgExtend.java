@@ -1,9 +1,8 @@
 package core.ob;
 
-import core.req.Escrow;
+import proto.base.Escrow;
 import core.req.MsgContextBase;
 import core.until.Log;
-import core.until.Params;
 
 public abstract class MsgExtend {
      /**

@@ -1,8 +1,7 @@
 package login;
 
 import core.note.function.MsgHandle;
-import core.req.Escrow;
-import core.req.MsgContextBase;
+import proto.base.Escrow;
 import proto.base.ConfigMsgName;
 
 public class LoginManage {

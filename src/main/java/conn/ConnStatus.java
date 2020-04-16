@@ -10,9 +10,12 @@ public class ConnStatus {
         Room
 
     }
+
+    //所属房间
     public ReqTo to ;
-//    public String departId;
-//    public String serviceId;
+
+    //玩家id
+    public HuamnObject huamnObject = new HuamnObject();
 
     public Status status;
 

@@ -1,9 +1,8 @@
 package conn.netty;
 
 import core.boot.config.Config;
-import core.req.Escrow;
+import proto.base.Escrow;
 import core.thread.Department;
-import core.thread.Service;
 import conn.ConnService;
 import core.until.Log;
 import io.netty.buffer.ByteBuf;

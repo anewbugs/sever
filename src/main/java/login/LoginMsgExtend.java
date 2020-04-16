@@ -3,7 +3,7 @@ package login;
 
 import core.ob.MsgExtend;
 import static core.ob.Observer.*;
-import core.req.Escrow;
+import proto.base.Escrow;
 import core.req.MsgContextBase;
 import core.until.Log;
 import proto.base.ConfigMsgName;

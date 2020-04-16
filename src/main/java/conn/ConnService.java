@@ -1,7 +1,7 @@
 package conn;
 
 import core.boot.config.Config;
-import core.req.Escrow;
+import proto.base.Escrow;
 import core.thread.Department;
 import core.thread.Service;
 import core.until.Log;
@@ -28,7 +28,6 @@ public class ConnService extends Service {
     private ConnStatus connStatus = new ConnStatus();
     /**检查客户端断连**/
     private TickTimer chanleCheck = new TickTimer(Config.LOST_CHANNLE_TIME);
-
 
     public ConnService(Department department, String id,Channel channel) {
         super( department, id );
@@ -71,13 +70,13 @@ public class ConnService extends Service {
             chanleCheck.reset();
             switch (connStatus.status){
                 case Login:
-                    department.req(connStatus.to, UserGlobalService.LOGIN_METHOD_MSG_HANDLE,this,poll);
+                    department.req(connStatus.to, UserGlobalService.LOGIN_METHOD_MSG_HANDLE,id,new Object[]{poll});
                     break;
                 case Hall:
-                    department.req(connStatus.to, RoomGlobalService.HALL_METHOD_MSG_HANDLE,this,poll);
+                    department.req(connStatus.to, RoomGlobalService.HALL_METHOD_MSG_HANDLE,id,new Object[]{poll});
                     break;
                 case Room:
-                    department.req(connStatus.to, GameService.GAME_METHOD_MSG_HANDLE,this,poll);
+                    department.req(connStatus.to, GameService.GAME_METHOD_MSG_HANDLE,id,new Object[]{poll});
                     break;
             }
 
