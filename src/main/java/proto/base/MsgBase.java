@@ -1,6 +1,7 @@
 package proto.base;
 
 import com.alibaba.fastjson.JSONObject;
+import core.until.Log;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -80,6 +81,39 @@ public class MsgBase {
             MsgBase msgBase = (MsgBase) JSONObject.toJavaObject(jsonObject, clazz);
             return msgBase;
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 对byte进行解码
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+//    public static <T>T DecodeMsg(Class<T> clazz, byte[] bytes){
+//        try {
+//            JSONObject jsonObject = (JSONObject) JSONObject.parse(bytes);
+//            return JSONObject.toJavaObject(jsonObject, clazz);
+//        }catch (Throwable e){
+//            Log.msg.error( "解码错误，msg={}" , new String(bytes) ,e);
+//        }finally {
+//            return null;
+//        }
+//    }
+
+    public static  <T>T DecodeMsg(Class<T> clazz, byte[] bytes){
+        //字节数组转化为JSON对象
+        try {
+            //Class<?> clazz = Class.forName("com.wu.server.proto.net."+protoName);
+            JSONObject jsonObject = (JSONObject) JSONObject.parse(bytes);
+            //           LogUntil.logger.debug(" MsgBase Receive: "+ jsonObject);
+            //将JSON对象转化为MsgaBase对象
+
+            T t = (T) JSONObject.toJavaObject(jsonObject, clazz);
+            return t;
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return null;

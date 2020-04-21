@@ -15,10 +15,13 @@ public class UserGlobalService extends Service {
     public final static int LOGIN_METHOD_MSG_HANDLE = 0;
 
     /*********************************/
-    MsgParam userGlobal = new MsgParam();
+    /**
+     * 服务器基础数据
+     */
+    MsgLoginParam userGlobal = new MsgLoginParam();
 
 
-    static class GameLoacat{}
+
     public UserGlobalService(Department department,String id) {
         super( department,id );
     }

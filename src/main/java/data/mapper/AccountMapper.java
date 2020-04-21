@@ -13,7 +13,8 @@ public interface  AccountMapper {
     @Select("select * from user where iduser=#{iduser} and password=#{password} ")
      Account queryAccount(@Param("iduser") String iduser,@Param("password") String password);
 
-
+    @Select( "select * from user where iduser=#{iduser}" )
+    Account queryOne(@Param("iduser") String iduser);
 
     @Insert("insert into user(iduser,password) values(#{iduser},#{password})")
     int register(@Param("iduser") String iduser,@Param("password") String password);

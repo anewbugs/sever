@@ -36,7 +36,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ByteBuf requestByteBuf = (ByteBuf)msg;
-        byte[] msgLengthBytes =new byte[2] ;
+        byte[] msgLengthBytes = new byte[ 2 ];
         requestByteBuf.readBytes(msgLengthBytes);
         int msgLength = (int)(((msgLengthBytes[0] << 8 ) & 0xff )|(msgLengthBytes[1] & 0xff));
         //解析协议名

@@ -195,7 +195,7 @@ public class Department implements IThreadPlan {
             method.setAccessible( true );
             method.invoke( serv,req.methodParam );
         }catch (Throwable e){
-            Log.core.error( "Req请求错误，req={}",req,this );
+            Log.core.error( "Req请求错误，req={} ",req,e );
         }finally {
             reqActiveStack.removeLast();
         }
@@ -283,25 +283,47 @@ public class Department implements IThreadPlan {
         req.reqTo = new ReqTo(to);
         req.methodKey = methodKey;
         req.methodParam = objects;
-
-        head.handleReq(req);
+        sendReq(req);
     }
 
+    /**
+     * 消息返回
+     * @param methodKey
+     * @param objects
+     */
     public void returns(int methodKey,Object...objects){
         Req req = reqActiveStack.getLast().returnNew();
         req.id = createReqID();
         req.methodKey = methodKey;
         req.type = Req.Req_Type.RPC;
         req.methodParam = objects;
-
-        head.handleReq(req);
-
+        sendReq(req);
     }
 
+    public Req makeReqByReqed(int methodKey){
+        Req req = reqActiveStack.getLast().returnNew();
+        req.id = createReqID();
+        req.methodKey = methodKey;
+        req.type = Req.Req_Type.RPC;
+        return req;
+    }
+
+    /**
+     * 发送消息
+     * @param req
+     */
+    public void sendReq(Req req){
+        head.handleReq( req );
+    }
+
+    /**
+     * 消息返回
+     * @param params
+     */
     public void returns(Params params){
         Req req = reqActiveStack.getLast().returnNew();
         req.returns = params;
-        head.handleReq(req);
+        sendReq(req);
     }
 
 

@@ -1,6 +1,7 @@
 package core.req;
 
 
+import core.boot.config.Config;
 import core.until.Params;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -49,6 +50,10 @@ public class Req {
         req.fromrSvId = this.reqTo.serviceId;
         req.reqTo = new ReqTo(this.fromDepartId,this.fromrSvId,"消息返回");
         return req;
+    }
+
+    public void send(){
+        Config.SERVER_WORD_HEAD.handleReq( this );
     }
 
     @Override

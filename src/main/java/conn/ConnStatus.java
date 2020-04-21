@@ -15,7 +15,7 @@ public class ConnStatus {
     public ReqTo to ;
 
     //玩家id
-    public HuamnObject huamnObject = new HuamnObject();
+    public HuamnObject humanObject = new HuamnObject();
 
     public Status status;
 
@@ -36,5 +36,9 @@ public class ConnStatus {
         this.to.reSet(departId,serviceId,"game");
 
 
+    }
+
+    public void updateHumanID(String id){
+        humanObject.update( id );
     }
 }

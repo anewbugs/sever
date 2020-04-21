@@ -44,7 +44,7 @@ public class ResultMapAnnotation {
         System.out.println(playDataMapper.queryplayerData("aa"));
     }
 
-    public <T> T getMapper(Class<T> var1){
+    public static  <T> T getMapper(Class<T> var1){
         return session.getMapper(var1);
     }
 
