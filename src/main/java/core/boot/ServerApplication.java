@@ -9,6 +9,7 @@ import core.note.function.DisMethod;
 import core.note.function.MsgHandle;
 import core.thread.Department;
 import core.thread.Service;
+import game.GameStart;
 import login.LoginDepart;
 import login.UserGlobalService;
 import org.reflections.Reflections;
@@ -16,6 +17,8 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ConfigurationBuilder;
 import proto.base.ConfigMsgName;
+import room.RoomDepart;
+import room.RoomGlobalService;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -60,6 +63,14 @@ public class ServerApplication {
         login.addService( loginSrv );
         login.start( Config.SERVER_WORD_HEAD );
 
+        //房间列表服务
+        Department room = new RoomDepart( Config.DEPART_ROOM_LIST_NAME );
+        Service roomSrv = new RoomGlobalService( room,Config.SRV_ROOM_LIST_NAME );
+        room.addService( roomSrv );
+        room.start( Config.SERVER_WORD_HEAD  );
+
+        //游戏服务线程组
+        GameStart.init( Config.SERVER_WORD_HEAD );
 
 
     }

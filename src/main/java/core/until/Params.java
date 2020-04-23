@@ -10,8 +10,15 @@ public class Params {
     private HashMap<String,Object> params = new HashMap();
 
     public Params(Object...param) {
-        for (int i =0 ; i < param.length / 2; i++){
-            params.put((String) param[i],param[i+1]);
+        if (param.length == 1){
+            params.put( null,param[0] );
+        }else {
+            for (int i =0 ; i < param.length / 2; i++){
+                params.put((String) param[i],param[i+1]);
+            }
         }
+
     }
+
+
 }
