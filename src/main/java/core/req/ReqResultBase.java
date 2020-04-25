@@ -15,7 +15,7 @@ public class ReqResultBase {
     /**方法接口*/
     private Function2 function;
 
-    public ReqResultBase(Params context, Function2 function) {
+    public ReqResultBase(Params context ,Function2 function) {
         context = context;
         this.function = function;
 

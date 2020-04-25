@@ -1,7 +1,9 @@
 package data.enity;
 
 
-public class PlayerData {
+import core.cause.SException;
+
+public class PlayerData implements Cloneable{
     public PlayerData(String iduser, int coin, String text, int win, int lost) {
         this.iduser = iduser;
         this.coin = coin;
@@ -29,5 +31,14 @@ public class PlayerData {
                 ", win=" + win +
                 ", lost=" + lost +
                 '}';
+    }
+
+    @Override
+    public  Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+           throw new SException("克隆出错",e);
+        }
     }
 }

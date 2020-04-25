@@ -1,6 +1,7 @@
 package proto.base;
 
 import com.alibaba.fastjson.JSONObject;
+import core.until.Params;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
@@ -9,6 +10,7 @@ import static javafx.scene.input.KeyCode.T;
 public class Escrow {
     public String msgName;
     public byte[] msgByte;
+    public Params context;
 
     public Escrow(String msgName, byte[] msgByte) {
         this.msgName = msgName;

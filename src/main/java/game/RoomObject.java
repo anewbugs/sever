@@ -1,15 +1,30 @@
 package game;
 
+import conn.ConnService;
 import core.req.MsgContextBase;
 import core.req.ReqTo;
+import core.thread.Department;
 import core.until.Log;
-
+import data.enity.PlayerData;
+import proto.base.Escrow;
+import proto.base.PlayerInfo;
+import proto.net.MsgGetRoomInfo;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class RoomObject extends MsgContextBase {
     /**配置数据**/
     public static int maxPlayer = 6;
+
+    /**
+     *构造方法
+     * @param roomId
+     */
+    public RoomObject(String roomId ) {
+        this.roomId = roomId;
+
+    }
+
     //出生点位置配置
     static float[][][] birthConfig =  {
             //阵营1出生点
@@ -48,45 +63,79 @@ public class RoomObject extends MsgContextBase {
 
     /**
      * 玩家加入
-     * @param id
      * @param to
      * @return
      */
-    public TankObject addTankObject(String id, ReqTo to) {
+    public boolean addTankObject(PlayerData data, ReqTo to) {
         TankObject tankObject = null;
         //房间人数
         if(tankList.size() >= maxPlayer){
             Log.game.warn("Room AddPlayer: room.AddPlayer fail, reach maxPlayer");
-            return tankObject;
+            return false;
         }
         //准备状态才能加人
         if(status != RoomStatus.PREPARE){
             Log.game.warn("Room AddPlayer: room.AddPlayer fail, not PREPARE");
-            return tankObject;
+            return false;
         }
         //已经在房间里
-        if(tankList.containsKey(id)){
+        if(tankList.containsKey(data.iduser)){
             Log.game.warn("Room AddPlayer: room.AddPlayer fail, already in this room");
-            return tankObject;
+            return false;
         }
-        tankObject = new TankObject( (camp[1][1] < camp[2][1] ? 1 : 2 ),id,to );
-        tankList.put( id,tankObject );
+        tankObject = new TankObject( (camp[1][1] < camp[2][1] ? 1 : 2 ),data.iduser,data,to );
+        tankList.put( data.iduser,tankObject );
         camp[tankObject.camp][1] ++;
-        return tankObject;
-
-//        //加入列表
-//        playerIds.put(id,new RoomMember(SwitchCamp(),id));
-//        //设置玩家数据
-//        user.roomId = this.roomId;
-//        //todo  player.setRoomId( this.id);
-//        //设置房主
-//        if(ownerId.equals("") ){
-//            ownerId = user.getId();
-//        }
-//        //广播
-//        Broadcast(ToMsg(new MsgGetRoomInfo()));
-//        return true;
+        /**创房者者为房间拥有者**/
+        if (roomOwner.equals( "" )){
+            roomOwner = data.iduser;
+        }else{
+            //组播
+            multicast(
+                    Escrow.escrowBuilder(
+                            getRoomInfo(
+                                    new MsgGetRoomInfo() ) ));
+        }
+        return true;
     }
+
+    /**
+     * 组播
+     * @param escrow
+     */
+    public void multicast(Escrow escrow){
+        for (TankObject tankObject :tankList.values()) {
+            Department.getCurrent().req(
+                    tankObject.getConn(),
+                    ConnService.CONN_METHOD_SEND_MSG,
+                    roomId,
+                    new Object[]{escrow});
+        }
+    }
+
+    public MsgGetRoomInfo getRoomInfo(MsgGetRoomInfo msgGetRoomInfo){
+        int count = tankList.size();
+        msgGetRoomInfo.players = new PlayerInfo[count];
+        //players
+        int i = 0;
+        for(TankObject tankObject : tankList.values()){
+            PlayerInfo playerInfo = new PlayerInfo();
+            playerInfo.id = tankObject.getId();
+            playerInfo.camp = tankObject.camp;
+            playerInfo.win = tankObject.getData().win;
+            playerInfo.lost = tankObject.getData().lost;
+            playerInfo.isOwner = 0;
+            //房主判断
+            if(roomOwner.equals( tankObject.getId() )){
+                playerInfo.isOwner = 1;
+            }
+            msgGetRoomInfo.players[i] = playerInfo;
+            i++;
+
+        }
+        return msgGetRoomInfo;
+    }
+
 
 
 

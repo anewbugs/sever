@@ -1,12 +1,13 @@
 package room;
 
 import core.req.ReqTo;
-import org.apache.commons.lang3.StringUtils;
+import proto.base.RoomInfo;
 
 public class RoomLocation {
     private long roomId;
     private String departId;
-    private int players = 0;
+    private int players = 1;
+    private int status = 0;
 
     public RoomLocation(long roomId, String departId) {
         this.roomId = roomId;
@@ -22,16 +23,31 @@ public class RoomLocation {
         return new ReqTo( departId,  String.valueOf( roomId ),"房间锁定" );
     }
 
-    public void up(){
-        players ++;
+    public void setPlayers(int size){
+        players = size;
     }
-
-    public void down(){
-        players --;
+    public void addPlays(int i){
+        players = players + i;
     }
 
     public String getRoomId() {
         return roomId + "";
+    }
+
+    public ReqTo getRommTo(){
+        return new ReqTo(departId,getRoomId() ,"房间定位" ) ;
+    }
+
+    public int getIntId(){
+        return (int) roomId;
+    }
+
+    public RoomInfo getRoomInfo(){
+        RoomInfo roomInfo = new RoomInfo();
+        roomInfo.id = (int) roomId;
+        roomInfo.count =players;
+        roomInfo.status = status;
+        return roomInfo;
     }
 
 }

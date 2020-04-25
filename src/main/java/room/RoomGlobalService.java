@@ -4,6 +4,7 @@ import core.note.clazz.DisServer;
 import core.note.function.DisMethod;
 import core.thread.Department;
 import core.thread.Service;
+import data.enity.PlayerData;
 import game.GameDepart;
 import game.GameService;
 import login.LoginMsgExtend;
@@ -41,7 +42,7 @@ public class RoomGlobalService extends Service {
     }
 
     @DisMethod(key = HALL_METHOD_MSG_HANDLE)
-    private void msgHandle(Object o){
+    private void msgHandle(Object o, PlayerData data){
         msgHandle.hadleMsg((Escrow) o,roomListObject);
     }
 }

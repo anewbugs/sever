@@ -20,5 +20,13 @@ public class Params {
 
     }
 
+    public Object get(String key){
+        return params.get( key );
+    }
+
+    public Object get(){
+        return params.get( null );
+    }
+
 
 }

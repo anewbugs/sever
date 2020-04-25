@@ -300,12 +300,49 @@ public class Department implements IThreadPlan {
         sendReq(req);
     }
 
+    /**
+     * 制造亲求
+     * @param methodKey
+     * @return
+     */
     public Req makeReqByReqed(int methodKey){
         Req req = reqActiveStack.getLast().returnNew();
         req.id = createReqID();
         req.methodKey = methodKey;
         req.type = Req.Req_Type.RPC;
         return req;
+    }
+
+    /**
+     * 带返回值的请求
+     * @param methodKey
+     * @param reqResultBase
+     * @param objects
+     */
+//    public void getReturn(int methodKey,ReqResultBase reqResultBase,Object...objects){
+//        long reqId =  createReqID();
+//        Req req = reqActiveStack.getLast().returnNew();
+//        req.id = reqId;
+//        req.methodKey = methodKey;
+//        req.type = Req.Req_Type.RPC;
+//        req.methodParam = objects;
+//        reqResultListener.put( reqId,reqResultBase );
+//        sendReq(req);
+//
+//    }
+
+    public void getReturn(ReqTo to,int methodKey,String srvId,ReqResultBase reqResultBase,Object...objects) {
+        Req req = new Req();
+        long reqId =  createReqID();
+        req.id = reqId;
+        req.fromDepartId = departmentId;
+        req.fromrSvId = srvId;
+        req.type = Req.Req_Type.RPC;
+        req.reqTo = new ReqTo(to);
+        req.methodKey = methodKey;
+        req.methodParam = objects;
+        reqResultListener.put( reqId,reqResultBase );
+        sendReq(req);
     }
 
     /**

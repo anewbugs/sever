@@ -3,6 +3,8 @@ package conn;
 import core.boot.config.Config;
 import core.note.clazz.DisServer;
 import core.note.function.DisMethod;
+import core.req.ReqTo;
+import core.until.Params;
 import io.netty.buffer.ByteBuf;
 import proto.base.ConfigMsgName;
 import proto.base.Escrow;
@@ -26,6 +28,8 @@ public class ConnService extends Service {
     public final static int CONN_METHOD_SEND_MSG = 0;
     /**更新链接客户端数据**/
     public final static int CONN_METHOD_UPDATE_STATUS_ID = 1;
+    /**获取玩家数据**/
+    public final static int CONN_METHOD_UPDATE_STATUS_ROOM =2;
     /*********/
 
 
@@ -95,7 +99,8 @@ public class ConnService extends Service {
                         department.req( connStatus.to, UserGlobalService.LOGIN_METHOD_MSG_HANDLE, id, new Object[]{poll} );
                         break;
                     case Hall:
-                        department.req( connStatus.to, RoomGlobalService.HALL_METHOD_MSG_HANDLE, id, new Object[]{poll} );
+                        poll.context = new Params("playerData", connStatus.humanObject.playerData.clone(),"departId",department.getId(),"srvId",id );
+                        department.req( connStatus.to, RoomGlobalService.HALL_METHOD_MSG_HANDLE, id, new Object[]{poll/*,connStatus.humanObject.playerData.clone()*/} );
                         break;
                     case Room:
                         department.req( connStatus.to, GameService.GAME_METHOD_MSG_HANDLE, id, new Object[]{poll} );
@@ -145,6 +150,18 @@ public class ConnService extends Service {
     private void updateStatuse(String id){
         connStatus.updateHumanID( id );
     }
+
+    /**
+     * 更新当前状态为房间状态
+     * @param to
+     */
+    @DisMethod( key = CONN_METHOD_UPDATE_STATUS_ROOM )
+    private void updateRoom(ReqTo to){
+        connStatus.setRoom( to.departmentId,to.serviceId );
+        //department.returns( new Params( "playerData",connStatus.humanObject.playerData.clone() ,"departId",department.getId(),"srvId",this.id)) ;
+    }
+
+
 
     /**
      * 本地线程业务

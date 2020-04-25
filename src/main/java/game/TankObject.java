@@ -24,12 +24,25 @@ public class TankObject {
 
     private ReqTo conn;
 
+    public int getHp() {
+        return hp;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public PlayerData getData() {
+        return data;
+    }
+
     private PlayerData data ;
 
-    public TankObject(int camp, String id, ReqTo to)  {
+    public TankObject(int camp, String id,PlayerData data, ReqTo to)  {
         this.camp = camp;
         this.id = id;
         conn = to;
+        this.data = data;
     }
 
 
@@ -45,4 +58,7 @@ public class TankObject {
     }
 
 
+    public ReqTo getConn() {
+        return conn;
+    }
 }
