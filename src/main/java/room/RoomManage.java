@@ -43,6 +43,8 @@ public class RoomManage {
                 new ReqTo(  (String)escrow.context.get("departId"), (String)escrow.context.get("srvId"),"game中链接点" )
                );
         depart.addService( service );
+        //本地保存房间信息
+        roomList.addRoomLocation( roomLocation );
         //更新各户端conn数据
         Department.getCurrent().returns( ConnService.CONN_METHOD_UPDATE_STATUS_ROOM,new Object[]{new ReqTo( roomLocation.getRommTo() )});
         //登入成功
@@ -65,7 +67,7 @@ public class RoomManage {
                 new Object[]{data,roomLocation.getReqto()}
         );
     }
-
+    //方法反回调用
     public static void enterRoom(Params returns, Params Context){
         Escrow escrow = (Escrow) Context.get("escrow");
         MsgEnterRoom msgEnterRoom =MsgBase.DecodeMsg( MsgEnterRoom.class,escrow.msgByte ) ;

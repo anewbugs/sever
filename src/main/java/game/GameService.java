@@ -8,6 +8,7 @@ import core.thread.Service;
 import core.until.Params;
 import data.enity.PlayerData;
 import proto.base.Escrow;
+import proto.net.MsgGetRoomInfo;
 
 @DisServer
 //todo
@@ -43,7 +44,13 @@ public class GameService extends Service {
 
     @DisMethod( key = GAME_METHOD_TADD_TANK )
     private void addTank( PlayerData data, ReqTo to){
-        department.returns( new Params( roomObject.addTankObject(data,to)  ) );
+        boolean isAdd = roomObject.addTankObject(data,to);
+        department.returns( new Params( isAdd  ) );
+        // 广播
+        if ( isAdd ){
+            roomObject.multicast( Escrow.escrowBuilder( roomObject.getRoomInfo( new MsgGetRoomInfo() ) ) );
+
+        }
     }
 
 }

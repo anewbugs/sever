@@ -42,7 +42,7 @@ public class RoomGlobalService extends Service {
     }
 
     @DisMethod(key = HALL_METHOD_MSG_HANDLE)
-    private void msgHandle(Object o, PlayerData data){
+    private void msgHandle(Object o){
         msgHandle.hadleMsg((Escrow) o,roomListObject);
     }
 }

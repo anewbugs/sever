@@ -99,6 +99,34 @@ public class RoomObject extends MsgContextBase {
         return true;
     }
 
+    public boolean removeTankObject(String id){
+        //准备状态才能删除
+        if(status != RoomStatus.PREPARE){
+            Log.game.warn("Room AddPlayer: room.AddPlayer fail, not PREPARE");
+            return false;
+        }
+
+        TankObject tankObject = tankList.get( id );
+
+        //不在房间里
+        if( tankObject == null){
+            Log.game.warn("Room AddPlayer: room.AddPlayer fail, already in this room");
+            return false;
+        }
+
+
+        tankList.remove( id );
+        camp[tankObject.camp][1] --;
+        if (roomOwner.equals( id )){
+            if (tankList.size() != 0){
+                roomOwner = tankList.keySet().iterator().next();
+            }
+
+        }
+
+        return true;
+    }
+
     /**
      * 组播
      * @param escrow

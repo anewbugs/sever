@@ -93,10 +93,12 @@ public class ConfigMsgName {
                 Room.MSG_LEAVE_ROOM,
                 Room.MSG_GET_ROOM_INFO,
                 Room.MSG_START_BATTLE,
-                Room.MSG_ENTER_ROOM,
+                //Room.MSG_ENTER_ROOM,
                 //战斗数据
                 Sync.MSG_FIRE,
-                Sync.MSG_SYNC_TANK
+                Sync.MSG_SYNC_TANK,
+                Sync.MSG_HIT
+
         );
     }
 

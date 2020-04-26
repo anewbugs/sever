@@ -14,7 +14,7 @@ public class Params {
             params.put( null,param[0] );
         }else {
             for (int i =0 ; i < param.length / 2; i++){
-                params.put((String) param[i],param[i+1]);
+                params.put((String) param[2 * i],param[2 * i + 1]);
             }
         }
 
