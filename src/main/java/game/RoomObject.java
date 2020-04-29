@@ -9,8 +9,8 @@ import data.enity.PlayerData;
 import proto.base.Escrow;
 import proto.base.PlayerInfo;
 import proto.base.TankInfo;
-import proto.net.MsgEnterBattle;
-import proto.net.MsgGetRoomInfo;
+import proto.net.*;
+
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -56,12 +56,94 @@ public class RoomObject extends MsgContextBase {
     private String roomOwner = "";
     /**房间状态**/
     private RoomStatus status = RoomStatus.PREPARE;
+    /**阵营1-2,camp[1][1]:阵营1数量，camp[1][2]:阵营1死亡数量**/
+    private int[][] camp = new int[3][3];
+    /**重新判定游戏结果**/
+    private long lastjudgeTime = 0;
+
     enum RoomStatus{
         PREPARE,
         FIGHT
     }
-    /**阵营1-2,camp[1][1]:阵营1数量，camp[1][2]:阵营1死亡数量**/
-    int[][] camp = new int[3][3];
+    //玩家移动
+    public void moving(MsgSyncTank msgSyncTank) {
+        if (status == RoomStatus.PREPARE){
+            Log.game.error( "未开战 id={}" ,msgSyncTank.id);
+            return;
+        }
+        TankObject tankObject = tankList.get( msgSyncTank.id );
+        if (tankObject == null){
+            Log.game.error( "该玩家不存在 id={}" ,msgSyncTank.id);
+            return;
+        }
+
+
+        moving(msgSyncTank);
+        multicast( Escrow.escrowBuilder( msgSyncTank ) );
+
+
+    }
+    //玩家开火
+    public void firing(MsgFire msgFire) {
+        if (status == RoomStatus.PREPARE){
+            Log.game.error( "未开战 id={}" ,msgFire.id);
+            return;
+        }
+        TankObject tankObject = tankList.get( msgFire.id );
+        if (tankObject == null){
+            Log.game.error( "该玩家不存在 id={}" ,msgFire.id);
+            return;
+        }
+
+        if (!tankObject.canFire()){
+            Log.game.error( "死亡不可开炮 id={}" ,msgFire.id);
+            return;
+        }
+
+
+        multicast( Escrow.escrowBuilder( msgFire ) );
+    }
+    //集中协议
+    public void hiting(MsgHit msgHit) {
+        if (status == RoomStatus.PREPARE){
+            Log.game.error( "未开战 id={}" ,msgHit.id);
+            return;
+        }
+        TankObject tankObject = tankList.get( msgHit.id );
+        if (tankObject == null){
+            Log.game.error( "该玩家不存在 id={}" ,msgHit.id);
+            return;
+        }
+
+        TankObject hitTankObject = tankList.get( msgHit.targetId );
+        if (tankObject == null){
+            Log.game.error( "被击中玩家不存在 id={}" ,msgHit.id);
+            return;
+        }
+
+        if (!hurt(hitTankObject,msgHit)){
+            Log.game.warn( "被击中玩家早以死亡 id={}" ,msgHit.targetId);
+            return;
+        }
+
+        multicast( Escrow.escrowBuilder( msgHit ) );
+    }
+
+    private boolean hurt(TankObject hitTankObject, MsgHit msgHit) {
+        if (hitTankObject.isDead()){
+            return false;
+        }
+        hitTankObject.hurt(msgHit);
+        if (hitTankObject.isDead()){
+           camp[hitTankObject.camp][2]++;
+        }
+
+        return true;
+
+    }
+
+
+
 
     /**
      * 玩家加入
@@ -172,7 +254,7 @@ public class RoomObject extends MsgContextBase {
         if (status != RoomStatus.PREPARE){
             return false;
         }
-
+        //对战双方人数
         if (camp[1][1] < 1 || camp[2][1]  < 1){
             return false;
         }
@@ -236,8 +318,13 @@ public class RoomObject extends MsgContextBase {
         return msg;
     }
 
+    /**
+     * 模型心跳
+     */
+    public void puluse(){
+        //todo
+    }
 
 
-    /**重新判定游戏结果**/
-    private long lastjudgeTime = 0;
+
 }

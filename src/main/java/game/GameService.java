@@ -34,7 +34,7 @@ public class GameService extends Service {
 
     @Override
     protected void pulseOverride() {
-
+        roomObject.puluse();
     }
 
     @DisMethod(key=GAME_METHOD_MSG_HANDLE)

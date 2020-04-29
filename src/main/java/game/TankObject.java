@@ -5,6 +5,9 @@ import core.req.ReqTo;
 import data.dbservice.PlayDataService;
 import data.enity.PlayerData;
 import proto.base.TankInfo;
+import proto.net.MsgFire;
+import proto.net.MsgHit;
+import proto.net.MsgSyncTank;
 
 public class TankObject {
     //*位置
@@ -82,5 +85,39 @@ public class TankObject {
 
     public void setHp(int hp) {
         this.hp = hp;
+    }
+
+    public boolean isDead(){
+        return hp > 0;
+    }
+
+    //移动
+    public boolean moving(MsgSyncTank msgSyncTank) {
+        //移动验证
+        if (isDead()){
+            return false;
+        }
+        //数据验证
+        move( msgSyncTank.x,msgSyncTank.y,msgSyncTank.z,msgSyncTank.ex,msgSyncTank.ey,msgSyncTank.ez );
+        return true;
+    }
+    //
+    public void firing(MsgFire msgFire) {
+    }
+
+    public boolean canFire() {
+        if (isDead()){
+            return false;
+        }
+        return true;
+    }
+
+    public void hurt(MsgHit msgHit) {
+        if (msgHit.damage < 0){
+            msgHit.damage = 35;
+        }
+            hp -= msgHit.damage;
+
+
     }
 }
