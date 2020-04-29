@@ -4,6 +4,7 @@ import core.req.Req;
 import core.req.ReqTo;
 import data.dbservice.PlayDataService;
 import data.enity.PlayerData;
+import proto.base.TankInfo;
 
 public class TankObject {
     //*位置
@@ -57,8 +58,29 @@ public class TankObject {
         this.ez = ez;
     }
 
+    //玩家数据转成TankInfo
+    public TankInfo PlayerToTankInfo(){
+        TankInfo tankInfo = new TankInfo(
+                this.getId(),
+                this.camp,
+                this.getHp(),
+                this.x,
+                this.y,
+                this.z,
+                this.ex,
+                this.ey,
+                this.ez);
+
+
+        return tankInfo;
+    }
+
 
     public ReqTo getConn() {
         return conn;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 }

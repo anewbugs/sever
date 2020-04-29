@@ -8,6 +8,8 @@ import core.until.Log;
 import data.enity.PlayerData;
 import proto.base.Escrow;
 import proto.base.PlayerInfo;
+import proto.base.TankInfo;
+import proto.net.MsgEnterBattle;
 import proto.net.MsgGetRoomInfo;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -164,6 +166,75 @@ public class RoomObject extends MsgContextBase {
         return msgGetRoomInfo;
     }
 
+    //能否开战
+    public boolean CanStartBattle() {
+        //已经是战斗状态
+        if (status != RoomStatus.PREPARE){
+            return false;
+        }
+
+        if (camp[1][1] < 1 || camp[2][1]  < 1){
+            return false;
+        }
+        return true;
+    }
+
+    //初始化位置
+    private void SetBirthPos(TankObject tankObject, int index){
+        int camp = tankObject.camp;
+        tankObject.move(
+                birthConfig[camp-1] [index][0],
+                birthConfig[camp-1][ index][1],
+                birthConfig[camp-1][ index][2],
+                birthConfig[camp-1][ index][3],
+                birthConfig[camp-1][ index][4],
+                birthConfig[camp-1][ index][5]);
+
+
+    }
+
+    //重置玩家战斗属性
+    private void ResetPlayers(){
+        //位置和旋转
+        int count1 = 0;
+        int count2 = 0;
+        for(TankObject tankObject : tankList.values()) {
+            //RoomMember roomMember = playerIds.get(id);
+            if(tankObject.camp == 1){
+                SetBirthPos(tankObject, count1);
+                count1++;
+            }
+            else {
+                SetBirthPos(tankObject, count2);
+                count2++;
+            }
+
+            tankObject.setHp( 100 );
+        }
+    }
+
+    //开战
+    public MsgEnterBattle StartBattle() {
+        if(!CanStartBattle()){
+            return null;
+        }
+        //状态
+        status = RoomStatus.FIGHT;
+        //玩家战斗属性
+        ResetPlayers();
+        //返回数据
+        MsgEnterBattle msg = new MsgEnterBattle();
+        msg.mapId = 1;
+        msg.tanks = new TankInfo[tankList.size()];
+
+        int i=0;
+        for(TankObject tankObject : tankList.values()) {
+            msg.tanks[i] = tankObject.PlayerToTankInfo();
+            i++;
+        }
+
+        return msg;
+    }
 
 
 
