@@ -14,4 +14,9 @@ public class HuamnObject {
         humanID = id;
         playerData = dataService.queryplayerData( id );
     }
+
+    public void updateDate(PlayerData data) {
+        playerData = data;
+        dataService.updatePlayerData( data );
+    }
 }

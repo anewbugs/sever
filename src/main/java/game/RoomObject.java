@@ -5,6 +5,7 @@ import core.req.MsgContextBase;
 import core.req.ReqTo;
 import core.thread.Department;
 import core.until.Log;
+import core.until.TickTimer;
 import data.enity.PlayerData;
 import proto.base.Escrow;
 import proto.base.PlayerInfo;
@@ -59,7 +60,7 @@ public class RoomObject extends MsgContextBase {
     /**阵营1-2,camp[1][1]:阵营1数量，camp[1][2]:阵营1死亡数量**/
     private int[][] camp = new int[3][3];
     /**重新判定游戏结果**/
-    private long lastjudgeTime = 0;
+    private TickTimer gamejudge = new TickTimer(1000 );
 
     enum RoomStatus{
         PREPARE,
@@ -314,15 +315,60 @@ public class RoomObject extends MsgContextBase {
             msg.tanks[i] = tankObject.PlayerToTankInfo();
             i++;
         }
-
+        gamejudge.reset();
         return msg;
+    }
+
+    /**
+     * 游戏状态判断
+     */
+    public void judge(){
+        //状态判断
+        if(status != RoomStatus.FIGHT){
+            return;
+        }
+        //定时
+        if (!gamejudge.isLost()){
+            return;
+        }
+
+        int lost = gameOver();
+
+        if (lost == 0){
+            return;
+        }
+
+        for (TankObject tankObject : tankList.values()) {
+            if (tankObject.camp == lost){
+                tankObject.updata(true,roomId);
+            }else{
+                tankObject.updata(false,roomId);
+            }
+
+        }
+
+        MsgBattleResult msg = new MsgBattleResult();
+        msg.winCamp = lost == 1 ? 2 : 1;
+        multicast( Escrow.escrowBuilder( msg ) );
+//        //清除掉线玩家
+//        cleanRoom();
+
+
+    }
+
+    private int gameOver() {
+        //阵营1
+        if (camp[1][1] == camp[1][2]) return 1;
+        //阵营2
+        if (camp[2][1] == camp[2][2]) return 2;
+        return 0;
     }
 
     /**
      * 模型心跳
      */
     public void puluse(){
-        //todo
+
     }
 
 

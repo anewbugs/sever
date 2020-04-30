@@ -13,7 +13,12 @@ public class TickTimer {
     }
 
     public boolean isLost(){
-        return System.currentTimeMillis() > checkLostTime;
+        if(  System.currentTimeMillis() > checkLostTime ){
+            reset();
+            return true;
+        }
+
+        return false;
     }
 
     public void reset(){

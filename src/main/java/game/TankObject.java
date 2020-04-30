@@ -1,8 +1,8 @@
 package game;
 
-import core.req.Req;
+import conn.ConnService;
 import core.req.ReqTo;
-import data.dbservice.PlayDataService;
+import core.thread.Department;
 import data.enity.PlayerData;
 import proto.base.TankInfo;
 import proto.net.MsgFire;
@@ -118,6 +118,20 @@ public class TankObject {
         }
             hp -= msgHit.damage;
 
+
+    }
+
+    public void updata(boolean isWin, String roomId) {
+        if (isWin){
+            data.win ++;
+        }else {
+            data.lost ++;
+        }
+        Department.getCurrent().req(
+                this.getConn(),
+                ConnService.CONN_METHOD_UPDATE_USER,
+                roomId,
+                new Object[]{data.clone()});
 
     }
 }

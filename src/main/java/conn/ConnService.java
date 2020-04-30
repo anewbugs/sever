@@ -5,6 +5,7 @@ import core.note.clazz.DisServer;
 import core.note.function.DisMethod;
 import core.req.ReqTo;
 import core.until.Params;
+import data.enity.PlayerData;
 import io.netty.buffer.ByteBuf;
 import proto.base.ConfigMsgName;
 import proto.base.Escrow;
@@ -29,7 +30,9 @@ public class ConnService extends Service {
     /**更新链接客户端数据**/
     public final static int CONN_METHOD_UPDATE_STATUS_ID = 1;
     /**获取玩家数据**/
-    public final static int CONN_METHOD_UPDATE_STATUS_ROOM =2;
+    public final static int CONN_METHOD_UPDATE_STATUS_ROOM = 2;
+    /**更新玩家数据**/
+    public final static int CONN_METHOD_UPDATE_USER = 3;
     /*********/
 
 
@@ -160,6 +163,13 @@ public class ConnService extends Service {
         connStatus.setRoom( to.departmentId,to.serviceId );
         //department.returns( new Params( "playerData",connStatus.humanObject.playerData.clone() ,"departId",department.getId(),"srvId",this.id)) ;
     }
+
+    @DisMethod( key = CONN_METHOD_UPDATE_USER )
+    private void updateUser(PlayerData data){
+        connStatus.humanObject.updateDate( data );
+    }
+
+
 
 
 

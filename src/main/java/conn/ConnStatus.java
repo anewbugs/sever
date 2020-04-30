@@ -2,8 +2,10 @@ package conn;
 
 import core.boot.config.Config;
 import core.req.ReqTo;
+import data.enity.PlayerData;
 
 public class ConnStatus {
+
     public enum Status {
         Login,
         Hall,
