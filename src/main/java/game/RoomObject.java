@@ -368,7 +368,10 @@ public class RoomObject extends MsgContextBase {
      * 模型心跳
      */
     public void puluse(){
-
+        judge();
+        for (TankObject tankObject : tankList.values()) {
+            tankObject.pulse();
+        }
     }
 
 

@@ -134,4 +134,8 @@ public class TankObject {
                 new Object[]{data.clone()});
 
     }
+
+    public void pulse() {
+        //玩家心跳
+    }
 }
