@@ -16,7 +16,7 @@ public class ReqResultBase {
     private Function2 function;
 
     public ReqResultBase(Params context ,Function2 function) {
-        context = context;
+        this.context = context;
         this.function = function;
 
     }

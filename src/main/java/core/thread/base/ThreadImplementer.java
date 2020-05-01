@@ -3,6 +3,7 @@ package core.thread.base;
 
 import com.google.common.base.Stopwatch;
 import core.thread.base.IThreadPlan;
+import core.until.Log;
 
 import java.util.concurrent.TimeUnit;
 
@@ -62,8 +63,7 @@ public class ThreadImplementer extends Thread{
                 }
 
             }catch (Throwable e){
-                // todo 打印日志
-                //error（e）；
+                Log.core.error( "心跳错误， case ={}" ,e,e);
             }finally {
                 //重置程序执行计时器
                 timer.reset();
