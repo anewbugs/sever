@@ -45,9 +45,11 @@ public class RoomObject extends MsgContextBase {
     };
 
 
+    public String getRoomId() {
+        return roomId;
+    }
 
-
-   /**房间id**/
+    /**房间id**/
     private String roomId;
     /**玩家列表**/
     private HashMap<String ,TankObject> tankList = new HashMap<>(  );
@@ -81,7 +83,6 @@ public class RoomObject extends MsgContextBase {
 
         moving(msgSyncTank);
         multicast( Escrow.escrowBuilder( msgSyncTank ) );
-
 
     }
     //玩家开火
@@ -368,12 +369,16 @@ public class RoomObject extends MsgContextBase {
      * 模型心跳
      */
     public void puluse(){
+       //游戏判断
         judge();
+        //预设心跳
         for (TankObject tankObject : tankList.values()) {
             tankObject.pulse();
         }
     }
 
 
-
+    public int getPlayers(){
+        return tankList.size();
+    }
 }

@@ -1,12 +1,14 @@
 package game;
 
 import conn.ConnService;
+import core.boot.config.Config;
 import core.note.function.MsgHandle;
 import core.thread.Department;
 import proto.base.ConfigMsgName;
 import proto.base.Escrow;
 import proto.base.MsgBase;
 import proto.net.*;
+import room.RoomGlobalService;
 
 public class GameManage {
     /**
@@ -39,6 +41,12 @@ public class GameManage {
             return;
         }
 
+
+        //连接信息更新
+        Department.getCurrent().returns( ConnService.CONN_METHOD_UPDATE_STATUS_ID,new Object[]{null}  );
+        // 大厅消息更新
+        Department.getCurrent().req( Config.TO_HALL, RoomGlobalService.HALL_METHOD_LEAVE_ROOM, roomObject.getRoomId(),new Object[]{roomObject.getRoomId(),roomObject.getPlayers()});
+        //消息返回
         Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLeaveRoom ) );
         //组播
         roomObject.multicast(
@@ -105,10 +113,5 @@ public class GameManage {
         MsgHit msgHit = MsgBase.DecodeMsg(MsgHit.class,escrow.msgByte   );
         roomObject.hiting(msgHit);
     }
-
-
-
-
-
 
 }

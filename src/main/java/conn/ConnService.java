@@ -18,6 +18,7 @@ import io.netty.channel.Channel;
 import login.UserGlobalService;
 import proto.base.MsgBase;
 import proto.net.MsgGetAchieve;
+import proto.net.MsgPong;
 import room.RoomGlobalService;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -35,7 +36,7 @@ public class ConnService extends Service {
     public final static int CONN_METHOD_UPDATE_USER = 3;
     /*********/
 
-
+    private final static Escrow PONG = Escrow.escrowBuilder( new MsgPong() );
 
     /**netty通信通道**/
     private Channel channel;
@@ -88,8 +89,8 @@ public class ConnService extends Service {
      */
     private void fireEscrow(Escrow poll) {
         //ping消息
-        if (poll.msgName.equals( ConfigMsgName.SysMsg.MSG_PING )){
-            sendMsg( poll );
+        if (poll.msgName.equals( ConfigMsgName.SysMsg.MSG_PING ) ){
+            sendMsg( PONG );
 
         }else if (poll.msgName.equals( ConfigMsgName.User.MSG_GET_ACHIEVE)){
             onUeser( poll );

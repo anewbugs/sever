@@ -261,6 +261,7 @@ public class Department implements IThreadPlan {
     public void addService(Service value){
         services.put( value.id,value );
     }
+    public void remove(String key){services.remove( key );}
 
     @Override
     public String toString() {

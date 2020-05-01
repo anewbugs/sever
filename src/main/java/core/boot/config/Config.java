@@ -1,5 +1,6 @@
 package core.boot.config;
 
+import core.req.ReqTo;
 import core.thread.Headquarters;
 import core.until.Until;
 
@@ -61,8 +62,10 @@ public class Config {
     public static final String LOST_CHANNLE_NAME = "offline.time";
     /**Chanle断连**/
     public static final int  LOST_CHANNLE_TIME;
-
-
+    /**大厅路径**/
+    public static final ReqTo TO_HALL = new ReqTo( DEPART_ROOM_LIST_NAME,SRV_ROOM_LIST_NAME,"大厅路径");
+    /**登陆路径**/
+    public static final ReqTo TO_LOGIN = new ReqTo( DEPART_Login_NAME, SRV_LOGIN_NAME,"登陆路径");
     /**数据初始化**/
     static {
         Properties properties = Until.readProperties(CONFIG_PATH);

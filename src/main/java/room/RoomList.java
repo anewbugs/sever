@@ -56,4 +56,8 @@ public class RoomList extends MsgContextBase {
         }
         return roomInfos;
     }
+
+    public void remove(String key){
+        rooms.remove( key );
+    }
 }

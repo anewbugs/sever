@@ -47,7 +47,6 @@ public abstract class Service {
 
     /**当前心跳**/
     private  void pulseThis(){
-        // todo 暂时没想到什么功能
     }
 
     /**子类心跳**/

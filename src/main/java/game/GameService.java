@@ -34,7 +34,12 @@ public class GameService extends Service {
 
     @Override
     protected void pulseOverride() {
+        //房间心跳
         roomObject.puluse();
+        //移除空房间
+        if (roomObject.getPlayers() == 0){
+            department.remove( roomObject.getRoomId() );
+        }
     }
 
     @DisMethod(key=GAME_METHOD_MSG_HANDLE)

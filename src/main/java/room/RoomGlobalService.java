@@ -23,6 +23,8 @@ public class RoomGlobalService extends Service {
     /**MethodKey*/
     /**消息分发**/
     public final static int HALL_METHOD_MSG_HANDLE = 0;
+    /**玩家离开**/
+    public final static int HALL_METHOD_LEAVE_ROOM = 1;
 
     /*********************************/
     /**房间列表**/
@@ -44,5 +46,14 @@ public class RoomGlobalService extends Service {
     @DisMethod(key = HALL_METHOD_MSG_HANDLE)
     private void msgHandle(Object o){
         msgHandle.hadleMsg((Escrow) o,roomListObject);
+    }
+
+    @DisMethod( key = HALL_METHOD_LEAVE_ROOM )
+    private void leaveRoom(String id,int users){
+        RoomLocation roomLocation = roomListObject.getRoom( id );
+        roomLocation.setPlayers( users );
+        if (roomLocation.getPlayers() == 0){
+            roomListObject.remove( id );
+        }
     }
 }

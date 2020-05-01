@@ -41,7 +41,10 @@ public class ConnStatus {
     }
 
     public void updateHumanID(String id){
-        humanObject.update( id );
+        if (id !=null){
+            humanObject.update( id );
+        }
+
         setHall();
     }
 }
