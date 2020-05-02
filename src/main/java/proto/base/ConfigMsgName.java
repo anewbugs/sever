@@ -50,7 +50,7 @@ public class ConfigMsgName {
     }
     public static final class SysMsg {
         public static final String MSG_PING = "MsgPing";
-        public static final String MSG_PONG = "MsgPong";
+        //public static final String MSG_PONG = "MsgPong";
     }
 
     private  final static HashSet<String> proto = new HashSet();

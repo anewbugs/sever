@@ -208,7 +208,8 @@ public class Department implements IThreadPlan {
      while (!pulseReqResults.isEmpty()){
          Req reqResult = pulseReqResults.remove( 0 );
          if (reqResultListener.containsKey( reqResult.id )){
-             reqResultListener.get( reqResult.id ).listen( reqResult );
+             reqResultListener.remove( reqResult.id  ).listen( reqResult );
+             //reqResultListener.get( reqResult.id ).listen( reqResult );
          }else{
              Log.core.error( "Req返回监听错误 req={}",reqResult,this );
          }
@@ -292,7 +293,7 @@ public class Department implements IThreadPlan {
      * @param methodKey
      * @param objects
      */
-    public void returns(int methodKey,Object...objects){
+    public void returnMsg(int methodKey,Object...objects){
         Req req = reqActiveStack.getLast().returnNew();
         req.id = createReqID();
         req.methodKey = methodKey;

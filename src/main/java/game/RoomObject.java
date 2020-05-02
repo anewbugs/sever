@@ -81,7 +81,7 @@ public class RoomObject extends MsgContextBase {
         }
 
 
-        moving(msgSyncTank);
+        tankObject.moving(msgSyncTank);
         multicast( Escrow.escrowBuilder( msgSyncTank ) );
 
     }
@@ -175,13 +175,13 @@ public class RoomObject extends MsgContextBase {
         /**创房者者为房间拥有者**/
         if (roomOwner.equals( "" )){
             roomOwner = data.iduser;
-        }else{
+        }/*else{
             //组播
             multicast(
                     Escrow.escrowBuilder(
                             getRoomInfo(
                                     new MsgGetRoomInfo() ) ));
-        }
+        }*/
         return true;
     }
 
@@ -251,7 +251,12 @@ public class RoomObject extends MsgContextBase {
     }
 
     //能否开战
-    public boolean CanStartBattle() {
+    public boolean CanStartBattle(String id) {
+        //是房主
+        if (!id.equals( this.roomOwner )){
+            return false;
+        }
+
         //已经是战斗状态
         if (status != RoomStatus.PREPARE){
             return false;
@@ -298,8 +303,8 @@ public class RoomObject extends MsgContextBase {
     }
 
     //开战
-    public MsgEnterBattle StartBattle() {
-        if(!CanStartBattle()){
+    public MsgEnterBattle StartBattle(String id) {
+        if(!CanStartBattle(id)){
             return null;
         }
         //状态

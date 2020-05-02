@@ -51,6 +51,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         requestByteBuf.readBytes(jsonBytes);
         requestByteBuf.release();
         this.conn.addMsgEscrow( new Escrow( protoName,jsonBytes ) );
+        Log.conn.debug("接收到消息 MsgId = {}" ,protoName );
 
     }
 }

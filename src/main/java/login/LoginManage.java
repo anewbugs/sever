@@ -31,7 +31,7 @@ public class LoginManage {
             //密码验证
             if (!accout.checkLogin( msgLogin.id,msgLogin.pw )){
                 msgLogin.result = 1;
-                Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLogin ) );
+                Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLogin ) );
                 return;
             }
             //不允许再次登入
@@ -39,7 +39,7 @@ public class LoginManage {
                 //发送踢下线协议
                 MsgKick msgKick = new MsgKick();
                 msgKick.reason = 0;
-                Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgKick ) );
+                Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgKick ) );
                 return;
             }
 
@@ -51,9 +51,9 @@ public class LoginManage {
 
             if (msgParam.applayLogin( msgLogin.id )){
                 //更新各户端conn数据
-                Department.getCurrent().returns( ConnService.CONN_METHOD_UPDATE_STATUS_ID,new Object[]{msgLogin.id});
+                Department.getCurrent().returnMsg( ConnService.CONN_METHOD_UPDATE_STATUS_ID,new Object[]{msgLogin.id});
                 //登入成功
-                Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLogin ) );
+                Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLogin ) );
             }
 
         }catch(Throwable e){

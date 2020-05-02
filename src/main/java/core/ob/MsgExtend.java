@@ -11,7 +11,7 @@ public abstract class MsgExtend {
      public abstract void fire(Escrow escrow, MsgContextBase params);
 
      public void hadleMsg(Escrow msgEscrow ,MsgContextBase params){
-          Log.core.debug("接收到客户端消息 msgId={}",msgEscrow.msgName);
+          Log.core.debug("分发消息 msgId={}",msgEscrow.msgName);
 
           fire(msgEscrow,params);
 

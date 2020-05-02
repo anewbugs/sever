@@ -25,7 +25,7 @@ public class RoomManage {
         RoomLocation roomLocation = roomList.applayRoomLocation();
         if (roomLocation == null){
             msgCreateRoom.result = 1;//设置失败
-            Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgCreateRoom ) );
+            Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgCreateRoom ) );
             return;
 
         }
@@ -33,7 +33,7 @@ public class RoomManage {
         PlayerData playerData = (PlayerData) escrow.context.get("playerData");
         if (playerData == null){
             msgCreateRoom.result = 1;//设置失败
-            Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgCreateRoom ) );
+            Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgCreateRoom ) );
             return;
         }
         Department depart = Config.SERVER_WORD_HEAD.getDeparts( roomLocation.getRommTo().departmentId );
@@ -46,9 +46,9 @@ public class RoomManage {
         //本地保存房间信息
         roomList.addRoomLocation( roomLocation );
         //更新各户端conn数据
-        Department.getCurrent().returns( ConnService.CONN_METHOD_UPDATE_STATUS_ROOM,new Object[]{new ReqTo( roomLocation.getRommTo() )});
+        Department.getCurrent().returnMsg( ConnService.CONN_METHOD_UPDATE_STATUS_ROOM,new Object[]{new ReqTo( roomLocation.getRommTo() )});
         //登入成功
-        Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgCreateRoom ) );
+        Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgCreateRoom ) );
     }
 
 
@@ -64,7 +64,7 @@ public class RoomManage {
                 GameService.GAME_METHOD_TADD_TANK,
                 roomLocation.getRoomId(),
                 new ReqResultBase(new Params( "escrow" ,escrow,"roomLocation",roomLocation),(Function2<Params,Params>) RoomManage::enterRoom ),
-                new Object[]{data,roomLocation.getReqto()}
+                new Object[]{data,new ReqTo( departId , srvId ,"游戏链接" )}
         );
     }
     //方法反回调用
@@ -106,7 +106,7 @@ public class RoomManage {
     public static void onMsgGetRoomList(Escrow escrow,RoomList roomList){
         MsgGetRoomList msgGetRoomList = MsgBase.DecodeMsg(MsgGetRoomList.class,escrow.msgByte  );
         msgGetRoomList.rooms = roomList.getList();
-        Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgGetRoomList ) );
+        Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgGetRoomList ) );
 
     }
 

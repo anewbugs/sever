@@ -88,7 +88,7 @@ public class TankObject {
     }
 
     public boolean isDead(){
-        return hp > 0;
+        return hp <= 0;
     }
 
     //移动
@@ -113,7 +113,7 @@ public class TankObject {
     }
 
     public void hurt(MsgHit msgHit) {
-        if (msgHit.damage < 0){
+        if (msgHit.damage <= 0){
             msgHit.damage = 35;
         }
             hp -= msgHit.damage;

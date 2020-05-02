@@ -20,7 +20,7 @@ public class GameManage {
     public static void onMsgGetRoomInfo(Escrow escrow,RoomObject roomObject){
         MsgGetRoomInfo msgGetRoomInfo = MsgBase.DecodeMsg( MsgGetRoomInfo.class,escrow.msgByte );
         msgGetRoomInfo = roomObject.getRoomInfo( msgGetRoomInfo );
-        Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgGetRoomInfo ) );
+        Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgGetRoomInfo ) );
 
 
     }
@@ -37,17 +37,17 @@ public class GameManage {
 
         if (! roomObject.removeTankObject( msgLeaveRoom.id )){
             msgLeaveRoom.result = 1;
-            Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLeaveRoom ) );
+            Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLeaveRoom ) );
             return;
         }
 
 
         //连接信息更新
-        Department.getCurrent().returns( ConnService.CONN_METHOD_UPDATE_STATUS_ID,new Object[]{null}  );
+        Department.getCurrent().returnMsg( ConnService.CONN_METHOD_UPDATE_STATUS_ID,new Object[]{null}  );
         // 大厅消息更新
         Department.getCurrent().req( Config.TO_HALL, RoomGlobalService.HALL_METHOD_LEAVE_ROOM, roomObject.getRoomId(),new Object[]{roomObject.getRoomId(),roomObject.getPlayers()});
         //消息返回
-        Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLeaveRoom ) );
+        Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLeaveRoom ) );
         //组播
         roomObject.multicast(
                 Escrow.escrowBuilder(
@@ -67,10 +67,10 @@ public class GameManage {
     public static void onMsgStartBattle(Escrow escrow,RoomObject roomObject){
         MsgStartBattle msgStartBattle = MsgBase.DecodeMsg(MsgStartBattle.class,escrow.msgByte   );
 
-        MsgEnterBattle msgEnterBattle = roomObject.StartBattle();
+        MsgEnterBattle msgEnterBattle = roomObject.StartBattle(msgStartBattle.id);
         if (msgEnterBattle == null){
             msgStartBattle.result = 1;
-            Department.getCurrent().returns( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgStartBattle ) );
+            Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgStartBattle ) );
             return;
         }
 
