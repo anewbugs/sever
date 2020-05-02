@@ -356,6 +356,8 @@ public class RoomObject extends MsgContextBase {
         MsgBattleResult msg = new MsgBattleResult();
         msg.winCamp = lost == 1 ? 2 : 1;
         multicast( Escrow.escrowBuilder( msg ) );
+        //重新设置房间状态
+        status = RoomStatus.PREPARE;
 //        //清除掉线玩家
 //        cleanRoom();
 
