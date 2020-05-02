@@ -42,14 +42,14 @@ public class ConnService extends Service {
     private Channel channel;
     /**客户端消息队列**/
     private ConcurrentLinkedQueue<Escrow> input = new ConcurrentLinkedQueue();
-    /**未收到消息的次数**/
-    private int lostTimes = 0;
     /**检查链接计时器**/
     private TickTimer connCheck = new TickTimer(10);
     /**玩家状态**/
     private ConnStatus connStatus = new ConnStatus();
     /**检查客户端断连**/
     private TickTimer chanleCheck = new TickTimer(Config.LOST_CHANNLE_TIME);
+
+    private boolean clear = false;
 
     public ConnService(Department department, String id,Channel channel) {
         super( department, id );
@@ -59,8 +59,8 @@ public class ConnService extends Service {
 
     @Override
     protected void pulseOverride() {
-        connCheck();
         pulseInput();
+        channelCheck();
         clear();
 
     }
@@ -68,7 +68,15 @@ public class ConnService extends Service {
     /**
      * 确认连接
      */
-    private void connCheck(){
+    private void channelCheck(){
+        //已经被检测断连
+        if (this.clear){
+            return;
+        }
+
+        if (!this.channel.isActive() || this.chanleCheck.isLost()){
+            this.clear = true;
+        }
 
     }
 
@@ -121,7 +129,9 @@ public class ConnService extends Service {
     /**
      * 清理链接
      */
-    private void clear(){}
+    private void clear(){
+      //todo
+    }
 
 
 
@@ -136,14 +146,18 @@ public class ConnService extends Service {
      */
     @DisMethod( key = CONN_METHOD_SEND_MSG )
     private void sendMsg(Escrow escrow){
-        //todo
-        ByteBuf byteBuf = this.channel.alloc().ioBuffer();
-        byte[] protoNameSize = new byte[1];
-        protoNameSize[0] = (byte)escrow.msgName.length();
-        byteBuf.writeBytes( protoNameSize );
-        byteBuf.writeBytes( escrow.msgName.getBytes() );
-        byteBuf.writeBytes( escrow.msgByte );
-        this.channel.writeAndFlush( byteBuf );
+        if (channel.isWritable()) {
+            ByteBuf byteBuf = this.channel.alloc().ioBuffer();
+            byte[] protoNameSize = new byte[ 1 ];
+            protoNameSize[ 0 ] = (byte) escrow.msgName.length();
+            byteBuf.writeBytes( protoNameSize );
+            byteBuf.writeBytes( escrow.msgName.getBytes() );
+            byteBuf.writeBytes( escrow.msgByte );
+            this.channel.writeAndFlush( byteBuf );
+        }else{
+            //断连
+            channelCheck();
+        }
     }
 
     /**
