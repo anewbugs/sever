@@ -1,21 +1,31 @@
 package game;
 
 import conn.ConnService;
+import core.boot.config.Config;
 import core.req.MsgContextBase;
 import core.req.ReqTo;
 import core.thread.Department;
 import core.until.Log;
 import core.until.TickTimer;
 import data.enity.PlayerData;
+import login.UserGlobalService;
 import proto.base.Escrow;
 import proto.base.PlayerInfo;
 import proto.base.TankInfo;
 import proto.net.*;
+import room.RoomGlobalService;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class RoomObject extends MsgContextBase {
+    /**
+     * 坦克状态配置
+     */
+    enum RoomStatus{
+        PREPARE,
+        FIGHT
+    }
     /**配置数据**/
     public static int maxPlayer = 6;
 
@@ -53,8 +63,6 @@ public class RoomObject extends MsgContextBase {
     private String roomId;
     /**玩家列表**/
     private HashMap<String ,TankObject> tankList = new HashMap<>(  );
-    /**掉线列表**/
-    private HashSet<String > offline = new HashSet<>(  );
     /**房间拥有者**/
     private String roomOwner = "";
     /**房间状态**/
@@ -64,10 +72,44 @@ public class RoomObject extends MsgContextBase {
     /**重新判定游戏结果**/
     private TickTimer gamejudge = new TickTimer(1000 );
 
-    enum RoomStatus{
-        PREPARE,
-        FIGHT
+    /**
+     * 链接掉线
+     * @param humanID
+     */
+    public void connLost(String humanID) {
+        TankObject tankObject = tankList.get( humanID );
+        if (tankObject == null){
+            Log.game.error( "conn链接玩家不存在 id={}" ,humanID);
+            return;
+        }
+
+        if (status == RoomStatus.PREPARE){
+            clearTankObject(humanID);
+
+        }else{
+            tankObject.isLost = true;
+        }
+
     }
+
+    /**
+     * 掉线清理
+     * @param humanID
+     */
+    public void clearTankObject(String humanID){
+        removeTankObject(humanID);
+        //更新大厅数据
+        Department.getCurrent().req( Config.TO_HALL, RoomGlobalService.HALL_METHOD_LEAVE_ROOM,getRoomId(),new Object[]{getRoomId(),getPlayers()});
+        //清理登陆链接
+        Department.getCurrent().req( Config.TO_LOGIN, UserGlobalService.LOGIN_METHOD_HUMAN_CLEAR,getRoomId(),new Object[]{humanID});
+        //组播
+        multicast(
+                Escrow.escrowBuilder(
+                        getRoomInfo(
+                                new MsgGetRoomInfo() ) ));
+    }
+
+
     //玩家移动
     public void moving(MsgSyncTank msgSyncTank) {
         if (status == RoomStatus.PREPARE){
@@ -185,6 +227,11 @@ public class RoomObject extends MsgContextBase {
         return true;
     }
 
+    /**
+     * 移除坦克
+     * @param id
+     * @return
+     */
     public boolean removeTankObject(String id){
         //准备状态才能删除
         if(status != RoomStatus.PREPARE){
@@ -219,6 +266,11 @@ public class RoomObject extends MsgContextBase {
      */
     public void multicast(Escrow escrow){
         for (TankObject tankObject :tankList.values()) {
+            //掉线玩家不发送消息
+            if (tankObject.isLost){
+                continue;
+            }
+
             Department.getCurrent().req(
                     tankObject.getConn(),
                     ConnService.CONN_METHOD_SEND_MSG,
@@ -358,10 +410,17 @@ public class RoomObject extends MsgContextBase {
         multicast( Escrow.escrowBuilder( msg ) );
         //重新设置房间状态
         status = RoomStatus.PREPARE;
-//        //清除掉线玩家
-//        cleanRoom();
+        //清除掉线玩家
+        cleanRoom();
 
 
+    }
+
+    /**
+     * 玩家掉线清理
+     */
+    private void cleanRoom() {
+        //todo
     }
 
     private int gameOver() {
@@ -387,5 +446,9 @@ public class RoomObject extends MsgContextBase {
 
     public int getPlayers(){
         return tankList.size();
+    }
+
+    public boolean isFight(){
+        return status == RoomStatus.FIGHT;
     }
 }

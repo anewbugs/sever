@@ -23,6 +23,8 @@ import room.RoomGlobalService;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static conn.ConnStatus.Status.*;
+
 @DisServer
 public class ConnService extends Service {
     /***proxy**/
@@ -130,7 +132,18 @@ public class ConnService extends Service {
      * 清理链接
      */
     private void clear(){
-      //todo
+        //清理判断
+        if (!clear){
+            return;
+        }
+
+        if (connStatus.status == Hall){
+            department.req( Config.TO_LOGIN, UserGlobalService.LOGIN_METHOD_HUMAN_LOST_3, id, new Object[]{null,connStatus.humanObject.humanID,false} );
+        }else if (connStatus.status == Room){
+            department.req( Config.TO_LOGIN, UserGlobalService.LOGIN_METHOD_HUMAN_LOST_3, id, new Object[]{connStatus.to,connStatus.humanObject.humanID,true} );
+            department.req( connStatus.to,GameService.GAME_METHOD_TANK_LOST,id,new Object[]{connStatus.humanObject.humanID} );
+        }
+
     }
 
 

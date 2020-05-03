@@ -28,6 +28,8 @@ public class TankObject {
 
     private ReqTo conn;
 
+    public boolean isLost = false;
+
     public int getHp() {
         return hp;
     }

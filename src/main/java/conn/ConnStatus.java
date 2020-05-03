@@ -19,7 +19,7 @@ public class ConnStatus {
     //玩家id
     public HuamnObject humanObject = new HuamnObject();
 
-    public Status status;
+    public  Status status;
 
     public ConnStatus() {
         this.status = Status.Login;

@@ -13,12 +13,15 @@ import proto.net.MsgGetRoomInfo;
 @DisServer
 //todo
 public class GameService extends Service {
+
     private static GameMsgExtend msgExtend = new GameMsgExtend();
     /**MethodKey*/
     /**消息分发**/
     public final static int GAME_METHOD_MSG_HANDLE = 0;
     /**玩家加入**/
     public final static int GAME_METHOD_TADD_TANK = 1;
+    /**玩家掉线**/
+    public static final int GAME_METHOD_TANK_LOST = 2;
     /*********************************/
     private RoomObject roomObject ;
 
@@ -56,6 +59,11 @@ public class GameService extends Service {
             roomObject.multicast( Escrow.escrowBuilder( roomObject.getRoomInfo( new MsgGetRoomInfo() ) ) );
 
         }
+    }
+
+    @DisMethod( key = GAME_METHOD_TANK_LOST )
+    private void tankLost(String humanID){
+        roomObject.connLost(humanID);
     }
 
 }
