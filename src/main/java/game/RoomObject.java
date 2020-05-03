@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class RoomObject extends MsgContextBase {
+
+
     /**
      * 坦克状态配置
      */
@@ -279,6 +281,53 @@ public class RoomObject extends MsgContextBase {
         }
     }
 
+    /**
+     * 玩家重新连接
+     * @param humanID
+     * @param toConn
+     */
+    public void tankReconnect(String humanID, ReqTo toConn) {
+        TankObject tankObject = this.tankList.get( humanID );
+        if (tankObject == null){
+            return;
+        }
+        //非战斗状态早已移除玩家
+        if (status == RoomStatus.PREPARE){
+            return;
+        }
+        //重新设置连接
+        tankObject.resetConn( toConn );
+        Department.getCurrent().req(
+                tankObject.getConn() ,
+                ConnService.CONN_METHOD_SEND_MSG,
+                roomId,
+                new Object[]{Escrow.escrowBuilder( recoomectBattle(  ) )});
+        Log.game.debug( "玩家重新进入游戏 humanID = {}",humanID );
+
+    }
+
+
+    //重新连入消息构建
+    public MsgEnterBattle recoomectBattle(){
+        MsgEnterBattle msg = new MsgEnterBattle();
+        msg.mapId = 1;
+        msg.tanks = new TankInfo[tankList.size()];
+
+        int i=0;
+        for(TankObject tankObject : tankList.values()) {
+            msg.tanks[i] = tankObject.PlayerToTankInfo();
+            i++;
+        }
+
+        return msg;
+    }
+
+
+    /**
+     * 获取房间列表
+     * @param msgGetRoomInfo
+     * @return
+     */
     public MsgGetRoomInfo getRoomInfo(MsgGetRoomInfo msgGetRoomInfo){
         int count = tankList.size();
         msgGetRoomInfo.players = new PlayerInfo[count];

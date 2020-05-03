@@ -17,7 +17,6 @@ import java.util.HashMap;
  * 全局房间服务
  */
 @DisServer
-//TODO
 public class RoomGlobalService extends Service {
     private static final RoomMsgExtend msgHandle = new RoomMsgExtend();
     /**MethodKey*/

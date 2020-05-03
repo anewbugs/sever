@@ -7,8 +7,12 @@ import proto.base.Escrow;
 import core.thread.Department;
 import core.thread.Service;
 
+/**
+ * @author wu
+ * 全局登陆业务
+ */
+
 @DisServer
-//todo
 public class UserGlobalService extends Service {
 
 

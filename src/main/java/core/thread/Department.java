@@ -11,8 +11,6 @@ import core.thread.base.ThreadImplementer;
 import core.until.Log;
 import core.until.Params;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.ibatis.annotations.Param;
-
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +22,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Department implements IThreadPlan {
 
-    //todo  日志
     /**当前线程实例*/
     final static ThreadLocal<Department> currentDepart = new ThreadLocal<>();
     /**线程执行者*/

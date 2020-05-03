@@ -41,7 +41,7 @@ public class LoginManage {
             if (msgParam.loginAgain( msgLogin.id )){
                 //发送踢下线协议
                 MsgKick msgKick = new MsgKick();
-                msgKick.reason = 0;
+                msgKick.reason = 1;
                 Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgKick ) );
                 return;
             }

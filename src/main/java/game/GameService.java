@@ -10,8 +10,12 @@ import data.enity.PlayerData;
 import proto.base.Escrow;
 import proto.net.MsgGetRoomInfo;
 
+/**
+ * @author wu
+ * 游戏逻辑处理服务
+ */
+
 @DisServer
-//todo
 public class GameService extends Service {
 
 
@@ -71,7 +75,7 @@ public class GameService extends Service {
 
     @DisMethod( key = GAME_METHOD_RECONNECT_2 )
     private void tankReconnect(String humanID,ReqTo toConn){
-        //todo 游戏重连
+       roomObject.tankReconnect( humanID, toConn);
 
     }
 

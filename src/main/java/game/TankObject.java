@@ -44,7 +44,12 @@ public class TankObject {
 
     private PlayerData data ;
 
-    public TankObject(int camp, String id,PlayerData data, ReqTo to)  {
+    public void resetConn(ReqTo conn) {
+        this.conn = conn;
+        this.isLost = false;
+    }
+
+    public TankObject(int camp, String id, PlayerData data, ReqTo to)  {
         this.camp = camp;
         this.id = id;
         conn = to;
