@@ -420,7 +420,12 @@ public class RoomObject extends MsgContextBase {
      * 玩家掉线清理
      */
     private void cleanRoom() {
-        //todo
+        for (TankObject tankObject : tankList.values()) {
+            //清理掉线玩家
+            if (tankObject.isLost){
+                clearTankObject( tankObject.getId() );
+            }
+        }
     }
 
     private int gameOver() {

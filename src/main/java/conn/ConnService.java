@@ -128,6 +128,13 @@ public class ConnService extends Service {
 
     }
 
+    @Override
+    public String toString() {
+        return "ConnService{" +
+                "channel=" + channel.toString() +
+                '}';
+    }
+
     /**
      * 清理链接
      */
@@ -138,11 +145,15 @@ public class ConnService extends Service {
         }
 
         if (connStatus.status == Hall){
+            //大厅中直接移除登陆消息
             department.req( Config.TO_LOGIN, UserGlobalService.LOGIN_METHOD_HUMAN_LOST_3, id, new Object[]{null,connStatus.humanObject.humanID,false} );
         }else if (connStatus.status == Room){
+            //房间中需要等待房间消息
             department.req( Config.TO_LOGIN, UserGlobalService.LOGIN_METHOD_HUMAN_LOST_3, id, new Object[]{connStatus.to,connStatus.humanObject.humanID,true} );
             department.req( connStatus.to,GameService.GAME_METHOD_TANK_LOST,id,new Object[]{connStatus.humanObject.humanID} );
         }
+        //移除链接服务
+        department.remove( this.id );
 
     }
 

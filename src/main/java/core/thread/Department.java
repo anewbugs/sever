@@ -261,8 +261,12 @@ public class Department implements IThreadPlan {
 
     public void addService(Service value){
         services.put( value.id,value );
+        Log.conn.info( "建立新链接 service={}",services.toString() );
     }
-    public void remove(String key){services.remove( key );}
+    public void remove(String key){
+        services.remove( key );
+        Log.conn.info( "移除链接 service={}",services.toString() );
+    }
 
     @Override
     public String toString() {
@@ -363,6 +367,12 @@ public class Department implements IThreadPlan {
         Req req = reqActiveStack.getLast().returnNew();
         req.returns = params;
         sendReq(req);
+    }
+
+
+    public ReqTo getReqFrom(){
+        Req req = reqActiveStack.getLast();
+        return new ReqTo( req.fromDepartId,req.fromrSvId,"获取发消息点" );
     }
 
 

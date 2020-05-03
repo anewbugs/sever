@@ -47,7 +47,7 @@ public class UserGlobalService extends Service {
     @DisMethod( key = LOGIN_METHOD_HUMAN_LOST_3 )
     private void humanLost(ReqTo roomTo,String id ,boolean isRoom){
         if (isRoom){
-            userGlobal.lost( id ,roomTo );
+            userGlobal.lost( id ,roomTo);
         }else{
             userGlobal.remove(id);
         }

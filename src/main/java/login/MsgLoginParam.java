@@ -30,18 +30,30 @@ public class MsgLoginParam extends MsgContextBase {
         return offLine.containsKey( id );
     }
 
+    public GameLoacat getOffLocal(String humanID){
+        return offLine.get( humanID );
+    }
+
+    public void reconned(String humanID){
+        offLine.remove( humanID );
+    }
+
+
     public boolean applayLogin(String id){
         if(logins.size() > Config.LIMIT_LOGIN_SIZE) return false;
         return logins.add( id );
     }
 
-    public void lost(String key, ReqTo to){
-        offLine.put( key,new GameLoacat(to) );
+    public void lost(String key, ReqTo toRoom){
+        offLine.put( key,new GameLoacat(toRoom) );
     }
 
     public void remove(String id) {
-        logins.remove( id );
-        offLine.remove( id );
-        Log.login.debug( "玩家下线 id={}" ,id );
+        if( offLine.remove( id ) != null){
+            logins.remove( id );
+            Log.login.debug( "玩家下线 id={}" ,id );
+        }
+
+
     }
 }

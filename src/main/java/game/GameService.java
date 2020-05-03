@@ -14,6 +14,7 @@ import proto.net.MsgGetRoomInfo;
 //todo
 public class GameService extends Service {
 
+
     private static GameMsgExtend msgExtend = new GameMsgExtend();
     /**MethodKey*/
     /**消息分发**/
@@ -22,6 +23,8 @@ public class GameService extends Service {
     public final static int GAME_METHOD_TADD_TANK = 1;
     /**玩家掉线**/
     public static final int GAME_METHOD_TANK_LOST = 2;
+    /**重新连接**/
+    public static final int GAME_METHOD_RECONNECT_2 = 3;
     /*********************************/
     private RoomObject roomObject ;
 
@@ -64,6 +67,12 @@ public class GameService extends Service {
     @DisMethod( key = GAME_METHOD_TANK_LOST )
     private void tankLost(String humanID){
         roomObject.connLost(humanID);
+    }
+
+    @DisMethod( key = GAME_METHOD_RECONNECT_2 )
+    private void tankReconnect(String humanID,ReqTo toConn){
+        //todo 游戏重连
+
     }
 
 }

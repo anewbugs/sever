@@ -1,12 +1,15 @@
 package login;
 
 import conn.ConnService;
+import core.boot.config.Config;
 import core.db.ResultMapAnnotation;
 import core.note.function.MsgHandle;
 import core.req.Req;
 import core.thread.Department;
+import core.until.Log;
 import data.dbservice.AccountService;
 import data.mapper.AccountMapper;
+import game.GameService;
 import proto.base.Escrow;
 import proto.base.ConfigMsgName;
 import proto.base.MsgBase;
@@ -45,7 +48,19 @@ public class LoginManage {
 
             //掉线处理
             if (msgParam.isLost( msgLogin.id ) ){
-                //todo
+                GameLoacat gameLoacat = msgParam.getOffLocal( msgLogin.id );
+                //更新各户端conn数据
+                Department.getCurrent().returnMsg( ConnService.CONN_METHOD_UPDATE_STATUS_ID,new Object[]{msgLogin.id});
+                //登入成功
+                Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLogin ) );
+                //更新链接数据
+                Department.getCurrent().returnMsg( ConnService.CONN_METHOD_UPDATE_STATUS_ROOM,new Object[]{gameLoacat.toRoom} );
+                //更新游戏数据
+                Department.getCurrent().req(
+                        gameLoacat.toRoom,
+                        GameService.GAME_METHOD_RECONNECT_2,
+                        Config.SRV_LOGIN_NAME,
+                        new Object[]{msgLogin.id,Department.getCurrent().getReqFrom()});
                 return;
             }
 
@@ -54,6 +69,7 @@ public class LoginManage {
                 Department.getCurrent().returnMsg( ConnService.CONN_METHOD_UPDATE_STATUS_ID,new Object[]{msgLogin.id});
                 //登入成功
                 Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLogin ) );
+                Log.login.debug( "登陆成功 humanID={}" ,msgLogin.id);
             }
 
         }catch(Throwable e){
