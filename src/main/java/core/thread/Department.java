@@ -188,6 +188,10 @@ public class Department implements IThreadPlan {
             reqActiveStack.add( req );
             //执行请求
             Service serv = services.get( req.reqTo.serviceId );
+            if (serv == null){
+                Log.core.warn( "服务找不到 Req={}", req.toString() );
+                return;
+            }
             Method method = Service.getFunction(serv.getClass(), req.methodKey );
             method.setAccessible( true );
             method.invoke( serv,req.methodParam );

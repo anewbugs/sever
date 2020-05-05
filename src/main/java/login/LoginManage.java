@@ -37,14 +37,7 @@ public class LoginManage {
                 Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgLogin ) );
                 return;
             }
-            //不允许再次登入
-            if (msgParam.loginAgain( msgLogin.id )){
-                //发送踢下线协议
-                MsgKick msgKick = new MsgKick();
-                msgKick.reason = 1;
-                Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgKick ) );
-                return;
-            }
+
 
             //掉线处理
             if (msgParam.isLost( msgLogin.id ) ){
@@ -61,6 +54,16 @@ public class LoginManage {
                         GameService.GAME_METHOD_RECONNECT_2,
                         Config.SRV_LOGIN_NAME,
                         new Object[]{msgLogin.id,Department.getCurrent().getReqFrom()});
+                msgParam.reconned( msgLogin.id );
+                return;
+            }
+
+            //不允许再次登入
+            if (msgParam.loginAgain( msgLogin.id )){
+                //发送踢下线协议
+                MsgKick msgKick = new MsgKick();
+                msgKick.reason = 1;
+                Department.getCurrent().returnMsg( ConnService.CONN_METHOD_SEND_MSG,Escrow.escrowBuilder( msgKick ) );
                 return;
             }
 

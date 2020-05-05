@@ -49,13 +49,14 @@ public class ConnService extends Service {
     /**玩家状态**/
     private ConnStatus connStatus = new ConnStatus();
     /**检查客户端断连**/
-    private TickTimer chanleCheck = new TickTimer(Config.LOST_CHANNLE_TIME);
+    private TickTimer chanleCheck;
 
     private boolean clear = false;
 
     public ConnService(Department department, String id,Channel channel) {
         super( department, id );
         this.channel = channel;
+        this.chanleCheck = new TickTimer(Config.LOST_CHANNLE_TIME);
     }
 
 
@@ -78,6 +79,7 @@ public class ConnService extends Service {
 
         if (!this.channel.isActive() || this.chanleCheck.isLost()){
             this.clear = true;
+            this.channel.close();
         }
 
     }
@@ -98,6 +100,7 @@ public class ConnService extends Service {
      * @param poll
      */
     private void fireEscrow(Escrow poll) {
+        chanleCheck.reset();
         //ping消息
         if (poll.msgName.equals( ConfigMsgName.SysMsg.MSG_PING ) ){
             sendMsg( PONG );
@@ -107,7 +110,7 @@ public class ConnService extends Service {
         }else {
             //非本地线程业务
             try {
-                chanleCheck.reset();
+
                 switch (connStatus.status) {
                     case Login:
                         department.req( connStatus.to, UserGlobalService.LOGIN_METHOD_MSG_HANDLE, id, new Object[]{poll} );
