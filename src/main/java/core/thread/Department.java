@@ -262,11 +262,11 @@ public class Department implements IThreadPlan {
 
     public void addService(Service value){
         services.put( value.id,value );
-        Log.conn.info( "建立新链接 service={}",services.toString() );
+        Log.conn.info( "建立新链接 service={}",value.toString() );
     }
     public void remove(String key){
-        services.remove( key );
-        Log.conn.info( "移除链接 service={}",services.toString() );
+        Service service =services.remove( key );
+        Log.conn.info( "移除链接 service={}",service );
     }
 
     @Override
